@@ -1,14 +1,12 @@
 // category_constant.dart
 //
-// The student categories the backend accepts.
+// The main student categories the backend has always accepted.
 //
-// `POST /auth/register-student` validates `categoryType` against exactly this
-// enum (`Academic | Admission | Job`) and rejects anything else with a 400.
-// There is no endpoint that serves this list — `/category/main` and
-// `/category/sub/{main}` do not exist — so this is the source of truth.
-//
-// The backend has no concept of a sub-category: `subCategory` and `categoryId`
-// are not in the register schema and are dropped if sent.
+// `GET /auth/registration-categories` is now the source of truth for what the
+// picker shows (main categories plus their sub-categories — see
+// `RegistrationCategory`). These constants remain for two jobs: mapping a wire
+// value to its localized label and icon, and as the offline fallback when that
+// endpoint cannot be reached.
 
 class MainCategory {
   static const String ACADEMIC = "Academic";

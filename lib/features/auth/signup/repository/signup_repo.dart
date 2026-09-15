@@ -2,7 +2,6 @@ import 'package:prostuti/core/services/api_response.dart';
 import 'package:prostuti/core/services/dio_service.dart';
 import 'package:prostuti/core/services/error_handler.dart';
 import 'package:prostuti/core/services/error_response.dart';
-import 'package:prostuti/features/auth/category/model/category_constant.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../model/otp_model.dart';
@@ -70,13 +69,8 @@ class SignupRepo {
             message: "Category type is required", success: false));
       }
 
-      // Validate that categoryType is one of the valid options
-      if (!MainCategory.values.contains(payload['categoryType'])) {
-        return ApiResponse.error(ErrorResponse(
-            message:
-                "Invalid category type. Must be one of: ${MainCategory.values.join(', ')}",
-            success: false));
-      }
+      // No client-side enum check: the accepted values now come from
+      // `/auth/registration-categories`, and the backend validates them.
 
       // Send the request
       final response =

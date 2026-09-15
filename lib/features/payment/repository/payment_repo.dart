@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/models/student_profile.dart';
 import '../../../core/services/error_handler.dart';
+import '../model/subscription_plan_model.dart';
 import '../model/voucher_model.dart';
 
 part 'payment_repo.g.dart';
@@ -117,6 +118,30 @@ class PaymentRepo {
         success: false,
         message: "Subscription initialization failed: ${e.toString()}",
       ));
+    }
+  }
+
+  /// `GET /subscription/plans` — the plans a student can subscribe to.
+  Future<Either<ErrorResponse, List<SubscriptionPlan>>>
+      getSubscriptionPlans() async {
+    final response = await _dioService.getRequest("/subscription/plans");
+
+    if (response.statusCode == 200) {
+      final data = response.data['data'];
+      if (data is! List) {
+        return Left(ErrorResponse(
+          success: false,
+          message: "Unexpected subscription plans format",
+        ));
+      }
+      return Right(data
+          .whereType<Map<String, dynamic>>()
+          .map(SubscriptionPlan.fromJson)
+          .toList());
+    } else {
+      final errorResponse = ErrorResponse.fromJson(response.data);
+      ErrorHandler().setErrorMessage(errorResponse.message);
+      return Left(errorResponse);
     }
   }
 

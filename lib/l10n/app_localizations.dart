@@ -2392,6 +2392,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not Now'**
   String get notNow;
+
+  /// No description provided for @forMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'for {months} months'**
+  String forMonths(int months);
+
+  /// No description provided for @noSubscriptionPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No subscription plans are available right now'**
+  String get noSubscriptionPlans;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1160,4 +1160,12 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get notNow => 'এখন নয়';
+
+  @override
+  String forMonths(int months) {
+    return '$months মাসের জন্য';
+  }
+
+  @override
+  String get noSubscriptionPlans => 'এই মুহূর্তে কোনো সাবস্ক্রিপশন প্ল্যান পাওয়া যাচ্ছে না';
 }

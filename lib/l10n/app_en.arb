@@ -398,5 +398,12 @@
   },
   "featureNotInTrial": "This feature is not part of the free trial.",
   "subscribeNow": "Subscribe Now",
-  "notNow": "Not Now"
+  "notNow": "Not Now",
+  "forMonths": "for {months} months",
+  "@forMonths": {
+    "placeholders": {
+      "months": { "type": "int" }
+    }
+  },
+  "noSubscriptionPlans": "No subscription plans are available right now"
 }
