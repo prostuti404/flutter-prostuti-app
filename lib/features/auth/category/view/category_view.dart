@@ -29,8 +29,9 @@ import 'package:skeletonizer/skeletonizer.dart';
 ///
 /// The options come from `GET /auth/registration-categories`: a main category
 /// (Academic | Admission | Job) and, for the ones that carry them, a
-/// sub-category (Science, Engineering, ...). Picking a main category with
-/// sub-categories slides into a second list; "Job" has none and completes in
+/// sub-category (Science, Engineering, ...). Selecting a main category that
+/// carries sub-categories expands that item in place, revealing the
+/// sub-category options nested underneath it; "Job" has none and completes in
 /// one step. Selecting is separate from submitting: tapping only marks a
 /// choice, the confirm button commits it.
 class CategoryView extends ConsumerStatefulWidget {
@@ -49,10 +50,6 @@ class CategoryViewState extends ConsumerState<CategoryView> with CommonWidgets {
 
   String? _selectedCategory;
   String? _selectedSubCategory;
-
-  /// The main category whose sub-categories are currently on screen, or null
-  /// while the main list is showing.
-  RegistrationCategory? _openCategory;
 
   @override
   void initState() {
@@ -91,66 +88,45 @@ class CategoryViewState extends ConsumerState<CategoryView> with CommonWidgets {
     final isLoading = ref.watch(_loadingProvider);
     final categoriesAsync = ref.watch(registrationCategoriesProvider);
     final theme = Theme.of(context);
-    final openCategory = _openCategory;
 
-    // The sub-category list is a second "page" of the same screen: the app
-    // bar's back arrow returns to the main list instead of leaving.
-    return PopScope(
-      canPop: openCategory == null,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _closeSubCategories();
-      },
-      child: Scaffold(
-        appBar: openCategory != null
-            ? AppBar(
-                title: Text(context.l10n!.subcategory),
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: _closeSubCategories,
-                ),
-              )
-            : commonAppbar(widget.isRegistration
-                ? context.l10n!.category
-                : context.l10n!.updateCategory),
-        body: Skeletonizer(
-          enabled: isLoading || categoriesAsync.isLoading,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  openCategory != null
-                      ? context.l10n!.pleaseSelectYourSubcategory
-                      : context.l10n!.selectCategory,
-                  style: theme.textTheme.titleMedium,
-                ),
-                const Gap(16),
-                if (!widget.isRegistration && _selectedCategory != null)
-                  _buildCurrentSelection(context),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 24, horizontal: 16),
-                    decoration: BoxDecoration(
-                        color: theme.colorScheme.primary,
-                        borderRadius: BorderRadius.circular(16)),
-                    child: openCategory != null
-                        ? _buildSubCategoryList(context, openCategory)
-                        : _buildMainCategoryList(
-                            context,
-                            categoriesAsync.valueOrNull ??
-                                RegistrationCategory.fallback,
-                          ),
+    return Scaffold(
+      appBar: commonAppbar(widget.isRegistration
+          ? context.l10n!.category
+          : context.l10n!.updateCategory),
+      body: Skeletonizer(
+        enabled: isLoading || categoriesAsync.isLoading,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.l10n!.selectCategory,
+                style: theme.textTheme.titleMedium,
+              ),
+              const Gap(16),
+              if (!widget.isRegistration && _selectedCategory != null)
+                _buildCurrentSelection(context),
+              Expanded(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                  decoration: BoxDecoration(
+                      color: theme.colorScheme.primary,
+                      borderRadius: BorderRadius.circular(16)),
+                  child: _buildMainCategoryList(
+                    context,
+                    categoriesAsync.valueOrNull ??
+                        RegistrationCategory.fallback,
                   ),
                 ),
-                const Gap(16),
-                LongButton(
-                  text: context.l10n!.confirm,
-                  onPressed: _canSubmit ? _submit : null,
-                ),
-              ],
-            ),
+              ),
+              const Gap(16),
+              LongButton(
+                text: context.l10n!.confirm,
+                onPressed: _canSubmit ? _submit : null,
+              ),
+            ],
           ),
         ),
       ),
@@ -177,6 +153,9 @@ class CategoryViewState extends ConsumerState<CategoryView> with CommonWidgets {
     return null;
   }
 
+  /// The main list. A category that carries sub-categories and is currently
+  /// selected expands in place, revealing its sub-category options nested
+  /// underneath it instead of navigating to a separate screen.
   Widget _buildMainCategoryList(
       BuildContext context, List<RegistrationCategory> categories) {
     return ListView.builder(
@@ -184,47 +163,56 @@ class CategoryViewState extends ConsumerState<CategoryView> with CommonWidgets {
       itemBuilder: (context, index) {
         final category = categories[index];
         final isSelected = _selectedCategory == category.mainCategory;
-        return _buildCategoryItem(
-          context,
-          label: _categoryLabel(context, category.mainCategory),
-          leading: Image.asset(
-            _categoryIcon(category.mainCategory),
-            height: 40,
-            width: 40,
-          ),
-          isSelected: isSelected,
-          // A selected sub-category shows under its parent so the user can
-          // see the full choice without re-opening the second list.
-          subtitle: isSelected && _selectedSubCategory != null
-              ? _subCategoryLabel(context, _selectedSubCategory!)
-              : null,
-          onSelect: () => _selectMainCategory(category),
+        final isExpanded = isSelected && category.hasSubCategories;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildCategoryItem(
+              context,
+              label: _categoryLabel(context, category.mainCategory),
+              leading: Image.asset(
+                _categoryIcon(category.mainCategory),
+                height: 40,
+                width: 40,
+              ),
+              isSelected: isSelected,
+              onSelect: () => _selectMainCategory(category),
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              child: isExpanded
+                  ? _buildSubCategoryList(context, category)
+                  : const SizedBox.shrink(),
+            ),
+          ],
         );
       },
     );
   }
 
+  /// The sub-category options for one expanded main category, indented with
+  /// extra horizontal padding so they read as nested under their parent
+  /// rather than as siblings of the main categories.
   Widget _buildSubCategoryList(
       BuildContext context, RegistrationCategory category) {
-    if (!category.hasSubCategories) {
-      return Center(child: Text(context.l10n!.noSubcategoriesFound));
-    }
-    return ListView.builder(
-      itemCount: category.subCategories.length,
-      itemBuilder: (context, index) {
-        final subCategory = category.subCategories[index];
-        return _buildCategoryItem(
-          context,
-          label: _subCategoryLabel(context, subCategory),
-          leading: Icon(_subCategoryIcon(subCategory),
-              size: 32, color: _accent(context)),
-          isSelected: _selectedSubCategory == subCategory,
-          onSelect: () => setState(() {
-            _selectedSubCategory = subCategory;
-            _openCategory = null;
-          }),
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.only(left: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: category.subCategories.map((subCategory) {
+          return _buildCategoryItem(
+            context,
+            label: _subCategoryLabel(context, subCategory),
+            leading: Icon(_subCategoryIcon(subCategory),
+                size: 28, color: _accent(context)),
+            isSelected: _selectedSubCategory == subCategory,
+            onSelect: () =>
+                setState(() => _selectedSubCategory = subCategory),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -234,12 +222,7 @@ class CategoryViewState extends ConsumerState<CategoryView> with CommonWidgets {
         _selectedSubCategory = null;
       }
       _selectedCategory = category.mainCategory;
-      _openCategory = category.hasSubCategories ? category : null;
     });
-  }
-
-  void _closeSubCategories() {
-    setState(() => _openCategory = null);
   }
 
   Widget _buildCurrentSelection(BuildContext context) {
@@ -277,7 +260,6 @@ class CategoryViewState extends ConsumerState<CategoryView> with CommonWidgets {
     required Widget leading,
     required VoidCallback onSelect,
     required bool isSelected,
-    String? subtitle,
   }) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -301,7 +283,6 @@ class CategoryViewState extends ConsumerState<CategoryView> with CommonWidgets {
       child: ListTile(
         leading: leading,
         title: Text(label),
-        subtitle: subtitle == null ? null : Text(subtitle),
         onTap: onSelect,
         trailing: Icon(
           isSelected ? Icons.check_circle : Icons.circle_outlined,
