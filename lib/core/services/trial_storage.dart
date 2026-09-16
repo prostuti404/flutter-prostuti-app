@@ -8,12 +8,14 @@ part 'trial_storage.g.dart';
 @riverpod
 TrialStorage trialStorage(TrialStorageRef ref) => TrialStorage();
 
-/// Device-local, per-user bookkeeping for the free-trial journey.
+/// Device-local, per-user bookkeeping for the free-trial journey — the
+/// **fallback** used only when `GET /config` reports no per-user trial state.
 ///
-/// The backend has no per-user trial or usage state: `GET /config` is a single
-/// global document, and `/user/profile` carries only subscription dates. So the
-/// two things the trial gate needs — when a user's clock started, and how much
-/// of a capped feature they have spent — are tracked here instead.
+/// The backend now returns `isTrialActive`, `trialDaysLeft`, `mockTestsUsed`
+/// and `liveClassesUsed` for the signed-in student, and [AccessControl] uses
+/// those directly. This class remains for a backend that predates them (or a
+/// config fetched without a token): when a user's clock started, and how much
+/// of a capped feature they have spent, are tracked here instead.
 ///
 /// **Every key is scoped to a user id**, so two accounts sharing a phone keep
 /// separate counters and logging back in restores your own.
@@ -23,7 +25,7 @@ TrialStorage trialStorage(TrialStorageRef ref) => TrialStorage();
 /// (it also no longer resets the user's chosen language). They do not survive
 /// "Clear data", and on iOS they do not survive reinstall; on Android they may
 /// or may not, depending on Google auto-backup. Those are known, accepted holes
-/// — this is a client-side stand-in until the backend can report usage itself.
+/// in a fallback path that the server-side state makes moot.
 class TrialStorage {
   /// Namespace for every key this class owns. Versioned so the shape can change
   /// later without colliding with data already on a device.

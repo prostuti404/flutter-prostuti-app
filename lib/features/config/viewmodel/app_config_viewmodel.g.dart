@@ -6,15 +6,21 @@ part of 'app_config_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appConfigNotifierHash() => r'825ab2459f3d2a01b1f6786a1907d9f849828a7f';
+String _$appConfigNotifierHash() => r'2fad9c0a3c82dafc19e1a5f9dffa2b5a3c4c9818';
 
-/// The app configuration, fetched once per app session.
+/// The app configuration, re-fetched whenever the session changes.
 ///
-/// This provider never fails. `/config` is unauthenticated and global, and the
-/// development flavor does not serve it at all, so any failure resolves to
-/// [AppConfig.fallback] — trial off, no gating — rather than an error state the
-/// UI would have to handle. Locking users out because a config request timed
-/// out would be far worse than briefly letting them through.
+/// `/config` answers differently with and without a student token — the
+/// per-user trial fields only come back when signed in — so this watches the
+/// access token and reloads on login, logout and token refresh. Without that,
+/// a config fetched on the splash screen would keep reporting "no trial
+/// state" for the whole session.
+///
+/// This provider never fails. The development flavor does not serve `/config`
+/// at all, so any failure resolves to [AppConfig.fallback] — trial off, no
+/// gating — rather than an error state the UI would have to handle. Locking
+/// users out because a config request timed out would be far worse than
+/// briefly letting them through.
 ///
 /// Copied from [AppConfigNotifier].
 @ProviderFor(AppConfigNotifier)

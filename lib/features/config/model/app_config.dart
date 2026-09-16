@@ -1,18 +1,17 @@
-/// The app-wide configuration served by `GET /api/v1/config`.
+/// The configuration served by `GET /api/v1/config`.
 ///
-/// This is a single global document — it is NOT user-scoped (the same payload
-/// comes back with or without an `Authorization` header), so nothing here says
-/// anything about a *particular* user's trial. Per-user state is resolved in
-/// [AccessControl] instead.
+/// Two layers share one document. The global part (trial switch, window,
+/// free features, limits, support number) is the same for everyone. When the
+/// request carries a student token the backend also appends that student's
+/// own trial state — [isTrialActive], [trialDaysLeft], [mockTestsUsed],
+/// [liveClassesUsed] — which [AccessControl] uses in place of the device-local
+/// bookkeeping it previously had to keep.
 class AppConfig {
   final bool isTrialEnabled;
   final int freeTrialDays;
 
-  /// Features the backend advertises as free during the trial.
-  ///
-  /// The API sends human-readable display labels ("Mock Tests", "Live
-  /// Classes"), not stable keys, so these are normalised into [FreeFeature]
-  /// rather than compared as raw strings.
+  /// Features the backend advertises as free during the trial, normalised
+  /// from the API's `MOCK_TEST` / `LIVE_CLASS` / `RECORDED_VIDEO` keys.
   final Set<FreeFeature> freeAccessFeatures;
 
   /// Per-feature usage caps, keyed by the API's own field names.
@@ -30,6 +29,17 @@ class AppConfig {
   /// to a device-local anchor instead. See [AccessControl].
   final DateTime? configCreatedAt;
 
+  /// The signed-in student's trial state, as the backend reports it.
+  ///
+  /// All four are null when the request had no valid student token (the
+  /// pre-login fetch, or a session that has just been cleared) or when talking
+  /// to a backend that predates these fields. [hasUserTrialState] is the
+  /// single check for "did the server tell us anything about this user".
+  final bool? isTrialActive;
+  final int? trialDaysLeft;
+  final int? mockTestsUsed;
+  final int? liveClassesUsed;
+
   const AppConfig({
     required this.isTrialEnabled,
     required this.freeTrialDays,
@@ -38,6 +48,10 @@ class AppConfig {
     this.maxLiveClasses,
     this.supportMobileNumber = '',
     this.configCreatedAt,
+    this.isTrialActive,
+    this.trialDaysLeft,
+    this.mockTestsUsed,
+    this.liveClassesUsed,
   });
 
   /// What the app assumes when `/config` cannot be reached.
@@ -70,14 +84,30 @@ class AppConfig {
       maxLiveClasses: (limits['maxLiveClasses'] as num?)?.toInt(),
       supportMobileNumber: data['supportMobileNumber'] as String? ?? '',
       configCreatedAt: DateTime.tryParse(data['createdAt']?.toString() ?? ''),
+      isTrialActive: data['isTrialActive'] as bool?,
+      trialDaysLeft: (data['trialDaysLeft'] as num?)?.toInt(),
+      mockTestsUsed: (data['mockTestsUsed'] as num?)?.toInt(),
+      liveClassesUsed: (data['liveClassesUsed'] as num?)?.toInt(),
     );
   }
+
+  /// Whether the backend included the signed-in student's trial state.
+  bool get hasUserTrialState => isTrialActive != null;
 
   /// The cap for [feature], or `null` when the backend sets none (which means
   /// unlimited — "Recorded Videos" is advertised as free but has no limit).
   int? limitFor(FreeFeature feature) => switch (feature) {
         FreeFeature.mockTest => maxMockTests,
         FreeFeature.liveClass => maxLiveClasses,
+        FreeFeature.recordedVideo => null,
+      };
+
+  /// How much of [feature] the backend says this student has consumed, or
+  /// null when it reports nothing for it (no token, old backend, or a feature
+  /// it does not meter).
+  int? usedFor(FreeFeature feature) => switch (feature) {
+        FreeFeature.mockTest => mockTestsUsed,
+        FreeFeature.liveClass => liveClassesUsed,
         FreeFeature.recordedVideo => null,
       };
 
@@ -100,23 +130,34 @@ class AppConfig {
       supportMobileNumber.replaceAll(RegExp(r'[^0-9+]'), '');
 }
 
-/// The features `freeAccessFeatures` can name, normalised away from the API's
-/// display labels.
+/// The features `freeAccessFeatures` can name.
 ///
-/// NOTE: [liveClass] has no implementation in this app and no route on the
-/// backend — it is parsed so the config round-trips faithfully, but nothing
-/// gates on it. Remove it once the backend drops it from the payload.
+/// Each carries the backend's enum [key] (`MOCK_TEST`, `LIVE_CLASS`,
+/// `RECORDED_VIDEO`), which is what the API now sends.
+///
+/// NOTE: [liveClass] has no implementation in this app — it is parsed so the
+/// config round-trips faithfully, but nothing gates on it yet.
 enum FreeFeature {
-  mockTest,
-  liveClass,
-  recordedVideo;
+  mockTest('MOCK_TEST'),
+  liveClass('LIVE_CLASS'),
+  recordedVideo('RECORDED_VIDEO');
 
-  /// Matches the backend's display label case- and whitespace-insensitively.
+  const FreeFeature(this.key);
+
+  /// The backend's stable identifier for this feature.
+  final String key;
+
+  /// Resolves a `freeAccessFeatures` entry.
   ///
-  /// This is deliberately tolerant because the label is admin-editable: it will
-  /// still break if someone renames "Mock Tests" to something unrelated, which
-  /// is why the backend should be sending stable keys instead.
+  /// Exact [key] matches are the contract. The tolerant fallback — case,
+  /// spacing, punctuation and singular/plural insensitive — is kept so a
+  /// backend still serving the older display labels ("Mock Tests") keeps
+  /// working during the rollout.
   static FreeFeature? fromLabel(String label) {
+    for (final feature in values) {
+      if (feature.key == label) return feature;
+    }
+
     final key = label.toLowerCase().replaceAll(RegExp(r'[^a-z]'), '');
     return switch (key) {
       'mocktest' || 'mocktests' => FreeFeature.mockTest,

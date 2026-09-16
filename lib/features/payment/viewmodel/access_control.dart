@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/helpers/functions.dart';
@@ -75,18 +77,26 @@ class TrialStatus {
   /// When the trial window closes. Null unless [tier] is trial or expired.
   final DateTime? trialEndsAt;
 
-  /// Recorded usage per feature on this device, for the current user.
+  /// Days left as the backend reported them, when it did. Preferred over the
+  /// [trialEndsAt] arithmetic because the server's clock is the one that
+  /// actually decides.
+  final int? reportedDaysLeft;
+
+  /// Usage per feature for the current user — the backend's counters when it
+  /// reports them, otherwise what this device has recorded.
   final Map<FreeFeature, int> usage;
 
   const TrialStatus({
     required this.tier,
     required this.config,
     this.trialEndsAt,
+    this.reportedDaysLeft,
     this.usage = const {},
   });
 
   /// Whole days left in the trial, floored at zero.
   int get daysRemaining {
+    if (reportedDaysLeft != null) return reportedDaysLeft!.clamp(0, 1 << 31);
     if (trialEndsAt == null) return 0;
     final left = trialEndsAt!.difference(DateTime.now()).inMinutes;
     return left <= 0 ? 0 : (left / (60 * 24)).ceil();
@@ -140,23 +150,28 @@ class TrialStatus {
 
 /// Decides what a user may reach before they subscribe.
 ///
-/// This is a client-side stand-in for state the backend does not yet expose.
-/// Two compromises are baked in, both documented where they are relied on:
+/// The backend is the source of truth: `/config`, fetched with the student's
+/// token, reports `isTrialActive`, `trialDaysLeft` and per-feature usage
+/// counters, and those are used as-is. The two client-side compromises below
+/// only apply when the server sends none of that (an older deployment, or a
+/// config fetched before the token was available):
 ///
 /// * **The trial clock is anchored to the student's `createdAt`** from
-///   `/user/profile`, because the backend has no per-user trial record. Being
-///   server-side, it survives reinstalls and holds across devices. Accounts
-///   older than the config document predate the feature and fall back to a
-///   device-local first-seen timestamp instead.
+///   `/user/profile`. Accounts older than the config document predate the
+///   feature and fall back to a device-local first-seen timestamp instead.
 /// * **Usage against `featureLimits` is counted on the device**
-///   ([TrialStorage]), because nothing reports consumption. It survives logout
-///   but not a data wipe, and a second device starts fresh.
+///   ([TrialStorage]). It survives logout but not a data wipe, and a second
+///   device starts fresh.
 ///
 /// Nothing here is enforced by the API, so treat it as a product gate, not a
 /// security boundary.
 @riverpod
 class AccessControl extends _$AccessControl {
   String? _userId;
+
+  /// Whether the current snapshot came from the backend's counters (as
+  /// opposed to [TrialStorage]). Decides what [recordUsage] does.
+  bool _serverTracked = false;
 
   @override
   Future<TrialStatus> build() async {
@@ -184,6 +199,9 @@ class AccessControl extends _$AccessControl {
     }
     _userId = userId;
 
+    // Subscription is checked before anything the trial fields say: whether
+    // the backend's `isTrialActive` accounts for a paid plan is not something
+    // to bet a paying user's access on.
     if (data.subscriptionStartDate != null &&
         data.subscriptionEndDate != null &&
         HelperFunc.isUserSubscribed(
@@ -198,6 +216,12 @@ class AccessControl extends _$AccessControl {
       return TrialStatus(tier: AccessTier.subscribed, config: config);
     }
 
+    if (config.hasUserTrialState) {
+      _serverTracked = true;
+      return _fromServer(config);
+    }
+
+    _serverTracked = false;
     final trialStart =
         await _resolveTrialStart(userId, data.createdAt, config: config);
     final trialEnd = trialStart.add(Duration(days: config.freeTrialDays));
@@ -224,7 +248,39 @@ class AccessControl extends _$AccessControl {
     );
   }
 
+  /// Builds the snapshot straight from the backend's per-user fields.
+  ///
+  /// `trialEndsAt` is derived from `trialDaysLeft` only so callers that look
+  /// at the date keep working; [TrialStatus.daysRemaining] reads the reported
+  /// number directly.
+  TrialStatus _fromServer(AppConfig config) {
+    final daysLeft = config.trialDaysLeft ?? 0;
+    final trialEnd = DateTime.now().add(Duration(days: daysLeft));
+
+    if (config.isTrialActive != true) {
+      return TrialStatus(
+        tier: AccessTier.expired,
+        config: config,
+        trialEndsAt: trialEnd,
+        reportedDaysLeft: daysLeft,
+      );
+    }
+
+    return TrialStatus(
+      tier: AccessTier.trial,
+      config: config,
+      trialEndsAt: trialEnd,
+      reportedDaysLeft: daysLeft,
+      usage: {
+        for (final feature in FreeFeature.values)
+          feature: config.usedFor(feature) ?? 0,
+      },
+    );
+  }
+
   /// Picks the moment the user's trial clock started.
+  ///
+  /// Only used when the backend reports no per-user trial state.
   ///
   /// Prefers the server's account-creation date — the only anchor that survives
   /// a reinstall and holds across devices. Falls back to a device-local
@@ -259,6 +315,11 @@ class AccessControl extends _$AccessControl {
   /// Call after the action succeeded — a failed request should not cost the
   /// user an allowance. No-op unless the user is inside a trial and the feature
   /// is actually capped.
+  ///
+  /// When the backend is counting, the number is bumped locally so the banner
+  /// moves at once, then `/config` is re-fetched to replace it with the
+  /// server's own figure (this provider watches the config, so the refetch
+  /// rebuilds the snapshot). Otherwise the device-local counter is used.
   Future<void> recordUsage(FreeFeature feature) async {
     final current = state.valueOrNull;
     final userId = _userId;
@@ -266,14 +327,25 @@ class AccessControl extends _$AccessControl {
     if (current.tier != AccessTier.trial) return;
     if (current.config.limitFor(feature) == null) return;
 
-    final next =
-        await ref.read(trialStorageProvider).recordUsage(userId, feature);
+    final int next;
+    if (_serverTracked) {
+      next = (current.usage[feature] ?? 0) + 1;
+    } else {
+      next = await ref.read(trialStorageProvider).recordUsage(userId, feature);
+    }
 
     state = AsyncValue.data(TrialStatus(
       tier: current.tier,
       config: current.config,
       trialEndsAt: current.trialEndsAt,
+      reportedDaysLeft: current.reportedDaysLeft,
       usage: {...current.usage, feature: next},
     ));
+
+    if (_serverTracked) {
+      // Not awaited: callers navigate as soon as this returns, and the
+      // config notifier is keepAlive so the refetch outlives this provider.
+      unawaited(ref.read(appConfigNotifierProvider.notifier).refresh());
+    }
   }
 }

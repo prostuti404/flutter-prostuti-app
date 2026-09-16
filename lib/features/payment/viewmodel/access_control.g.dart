@@ -6,21 +6,22 @@ part of 'access_control.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$accessControlHash() => r'ed6190caf7d3448a2934e8deaca9ee07cadfc71d';
+String _$accessControlHash() => r'40b1784eb4196ebb4d3739fa29648bdc19b80c05';
 
 /// Decides what a user may reach before they subscribe.
 ///
-/// This is a client-side stand-in for state the backend does not yet expose.
-/// Two compromises are baked in, both documented where they are relied on:
+/// The backend is the source of truth: `/config`, fetched with the student's
+/// token, reports `isTrialActive`, `trialDaysLeft` and per-feature usage
+/// counters, and those are used as-is. The two client-side compromises below
+/// only apply when the server sends none of that (an older deployment, or a
+/// config fetched before the token was available):
 ///
 /// * **The trial clock is anchored to the student's `createdAt`** from
-///   `/user/profile`, because the backend has no per-user trial record. Being
-///   server-side, it survives reinstalls and holds across devices. Accounts
-///   older than the config document predate the feature and fall back to a
-///   device-local first-seen timestamp instead.
+///   `/user/profile`. Accounts older than the config document predate the
+///   feature and fall back to a device-local first-seen timestamp instead.
 /// * **Usage against `featureLimits` is counted on the device**
-///   ([TrialStorage]), because nothing reports consumption. It survives logout
-///   but not a data wipe, and a second device starts fresh.
+///   ([TrialStorage]). It survives logout but not a data wipe, and a second
+///   device starts fresh.
 ///
 /// Nothing here is enforced by the API, so treat it as a product gate, not a
 /// security boundary.
