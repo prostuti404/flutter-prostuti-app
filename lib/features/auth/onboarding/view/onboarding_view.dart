@@ -20,10 +20,19 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
+  /// Auto-advances the carousel. Held so it can be cancelled on dispose —
+  /// otherwise it keeps firing after "Get Started" replaces this screen and
+  /// drives a controller whose PageView no longer exists.
+  Timer? _autoAdvance;
+
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+    _autoAdvance = Timer.periodic(const Duration(seconds: 5), (_) {
+      // Guard as well as cancel: a tick already queued when the route is
+      // popped can still land after the PageView has detached.
+      if (!mounted || !_pageController.hasClients) return;
+
       if (_currentIndex < 1) {
         _currentIndex++;
       } else {
@@ -36,6 +45,13 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
         curve: Curves.easeIn,
       );
     });
+  }
+
+  @override
+  void dispose() {
+    _autoAdvance?.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
