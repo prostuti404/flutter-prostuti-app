@@ -569,6 +569,144 @@ abstract class AppLocalizations {
   /// **'Mock Test'**
   String get mockTest;
 
+  /// No description provided for @segmentTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Segment Test'**
+  String get segmentTest;
+
+  /// No description provided for @segmentTestDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select each of the details below accurately for your goal-oriented test.'**
+  String get segmentTestDescription;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @quizer.
+  ///
+  /// In en, this message translates to:
+  /// **'Quizer'**
+  String get quizer;
+
+  /// No description provided for @selectTestType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Test Type'**
+  String get selectTestType;
+
+  /// No description provided for @testTypeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Test is everything about your preparation in one place - mock tests, segment tests, quizer. Choose, take the test, see the results, and learn from your mistakes. Make preparation easier and more effective!'**
+  String get testTypeDescription;
+
+  /// No description provided for @questionStandard.
+  ///
+  /// In en, this message translates to:
+  /// **'Question Standard'**
+  String get questionStandard;
+
+  /// No description provided for @addAnotherSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Another Subject'**
+  String get addAnotherSubject;
+
+  /// No description provided for @questionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Questions'**
+  String get questionCount;
+
+  /// No description provided for @selectQuestionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Select number of questions'**
+  String get selectQuestionCount;
+
+  /// No description provided for @negativeMarking.
+  ///
+  /// In en, this message translates to:
+  /// **'Negative Marking'**
+  String get negativeMarking;
+
+  /// No description provided for @testDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get testDuration;
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get hours;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get minutes;
+
+  /// No description provided for @seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get seconds;
+
+  /// No description provided for @startTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Test'**
+  String get startTest;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error!'**
+  String get errorTitle;
+
+  /// No description provided for @selectAtLeastOneSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one subject.'**
+  String get selectAtLeastOneSubject;
+
+  /// No description provided for @enterValidQuestionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the number of questions correctly.'**
+  String get enterValidQuestionCount;
+
+  /// No description provided for @enterValidTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the time correctly.'**
+  String get enterValidTime;
+
+  /// No description provided for @questionTypeFilterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Question Type*'**
+  String get questionTypeFilterLabel;
+
+  /// No description provided for @selectAtLeastOneQuestionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one question type.'**
+  String get selectAtLeastOneQuestionType;
+
   /// No description provided for @clearYourDoubts.
   ///
   /// In en, this message translates to:
@@ -1601,6 +1739,12 @@ abstract class AppLocalizations {
   /// **'My Calendar'**
   String get myCalendar;
 
+  /// No description provided for @myFlashcards.
+  ///
+  /// In en, this message translates to:
+  /// **'My Flashcards'**
+  String get myFlashcards;
+
   /// No description provided for @routineLoadError.
   ///
   /// In en, this message translates to:
@@ -2404,6 +2548,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No subscription plans are available right now'**
   String get noSubscriptionPlans;
+
+  /// No description provided for @faqAskQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a Question'**
+  String get faqAskQuestion;
+
+  /// No description provided for @faqQuestion1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I buy a test course?'**
+  String get faqQuestion1;
+
+  /// No description provided for @faqAnswer1.
+  ///
+  /// In en, this message translates to:
+  /// **'To buy a subscription plan in the Prostuti app, log in to your account, go to the \"Subscription\" menu, choose the plan you prefer (1 month, 3 months, 6 months, or 12 months), and pay using our secure payment gateway. Once subscribed, you will have access to all test courses, study materials, and other premium features.'**
+  String get faqAnswer1;
+
+  /// No description provided for @faqQuestion2.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I create a flashcard?'**
+  String get faqQuestion2;
+
+  /// No description provided for @faqAnswer2.
+  ///
+  /// In en, this message translates to:
+  /// **'To create a flashcard in the Prostuti app, log in to your account, go to the \"Flashcard\" section, tap the \"Create New Flashcard\" button, enter your question and answer, and tap \"Save\". You can later edit, organize, and study the flashcards you have created.'**
+  String get faqAnswer2;
+
+  /// No description provided for @faqQuestion3.
+  ///
+  /// In en, this message translates to:
+  /// **'Which features can I use after my subscription ends?'**
+  String get faqQuestion3;
+
+  /// No description provided for @faqAnswer3.
+  ///
+  /// In en, this message translates to:
+  /// **'Even after your subscription ends, you can still use the following features: the test system, unlimited doubt solving, unlimited flashcards, and some pre-recorded courses. However, to access premium content and new courses you will need to subscribe again.'**
+  String get faqAnswer3;
+
+  /// No description provided for @faqQuestion4.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the refund policy?'**
+  String get faqQuestion4;
+
+  /// No description provided for @faqAnswer4.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a subscription is purchased, there is no option to cancel or get a refund except where required by law. Before subscribing, please review all the necessary information about our test courses and services. If you have any questions, contact our support team before subscribing.'**
+  String get faqAnswer4;
+
+  /// No description provided for @faqQuestion5.
+  ///
+  /// In en, this message translates to:
+  /// **'Does the Prostuti app store my personal information?'**
+  String get faqQuestion5;
+
+  /// No description provided for @faqAnswer5.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, we store your personal information and keep it secure. We collect your name, email, phone number, payment details, study interests, profile information, and academic history. We do not share your information with any other third parties, except service providers such as payment processors and cloud service providers who help us operate our platform.'**
+  String get faqAnswer5;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

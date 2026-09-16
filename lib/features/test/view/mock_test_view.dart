@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:prostuti/common/widgets/long_button.dart';
+import 'package:prostuti/core/services/localization_service.dart';
 import 'package:prostuti/features/test/view/written_mock_quiz_screen.dart';
 import 'package:prostuti/features/test/viewmodel/written_quiz_viewmodel.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -34,15 +35,16 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
   final TextEditingController secondController = TextEditingController();
   bool isNegativeMarking = false;
   String selectedQuestionType = "MCQ";
-  String selectedStandard = "ইঞ্জিনিয়ারিং";
+  String selectedStandard = QuestionStandard.engineering;
   List<SelectedSubjectAndChapter> selectedSubjects = [];
 
   @override
   void initState() {
     super.initState();
-    // Add one subject selector by default
-    selectedSubjects
-        .add(SelectedSubjectAndChapter(subject: "সাবজেক্ট সিলেক্ট করুন"));
+    // Add one subject selector by default. An empty subject is the
+    // "nothing picked yet" sentinel; the dropdown shows a localized
+    // placeholder label for it instead of storing translated text.
+    selectedSubjects.add(SelectedSubjectAndChapter(subject: ""));
   }
 
   // Helper method to convert hours, minutes, seconds to total minutes
@@ -71,7 +73,7 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
               ),
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                hintText: "০০",
+                hintText: "00",
                 hintStyle: TextStyle(
                   fontSize: 24,
                   color: Colors.grey,
@@ -119,21 +121,20 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
 
     // Filter out placeholder subjects. The list is now of the correct type.
     final validSubjects = selectedSubjects
-        .where(
-            (s) => s.subject != "সাবজেক্ট সিলেক্ট করুন" && s.subject.isNotEmpty)
+        .where((s) => s.subject.isNotEmpty)
         .map((s) => s.toJson()) // Convert to JSON
         .toList();
 
     if (validSubjects.isEmpty) {
-      _showValidationError("কমপক্ষে একটি বিষয় সিলেক্ট করুন।");
+      _showValidationError(context.l10n!.selectAtLeastOneSubject);
       return;
     }
     if (questionCount <= 0) {
-      _showValidationError("প্রশ্ন সংখ্যাটি সঠিকভাবে লিখুন।");
+      _showValidationError(context.l10n!.enterValidQuestionCount);
       return;
     }
     if (time <= 0) {
-      _showValidationError("সময়টি সঠিকভাবে লিখুন।");
+      _showValidationError(context.l10n!.enterValidTime);
       return;
     }
 
@@ -179,21 +180,20 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
 
     // Filter out placeholder subjects. The list is now of the correct type.
     final validSubjects = selectedSubjects
-        .where(
-            (s) => s.subject != "সাবজেক্ট সিলেক্ট করুন" && s.subject.isNotEmpty)
+        .where((s) => s.subject.isNotEmpty)
         .map((s) => s.toJson()) // Convert to JSON
         .toList();
 
     if (validSubjects.isEmpty) {
-      _showValidationError("কমপক্ষে একটি বিষয় সিলেক্ট করুন।");
+      _showValidationError(context.l10n!.selectAtLeastOneSubject);
       return;
     }
     if (questionCount <= 0) {
-      _showValidationError("প্রশ্ন সংখ্যাটি সঠিকভাবে লিখুন।");
+      _showValidationError(context.l10n!.enterValidQuestionCount);
       return;
     }
     if (time <= 0) {
-      _showValidationError("সময়টি সঠিকভাবে লিখুন।");
+      _showValidationError(context.l10n!.enterValidTime);
       return;
     }
 
@@ -236,14 +236,14 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          "ত্রুটি!",
+          context.l10n!.errorTitle,
           style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
         ),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(), // Close the dialog
-            child: Text("ঠিক আছে",style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+            child: Text(context.l10n!.ok, style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
           ),
         ],
       ),
@@ -259,7 +259,7 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: commonAppbar("মক-টেস্ট"),
+      appBar: commonAppbar(context.l10n!.mockTest),
       body: Skeletonizer(
         enabled: isSubjectLoading,
         child: state.when(
@@ -285,7 +285,7 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
           children: [
             // Renders nothing unless the user is inside a free trial.
             const TrialStatusBanner(feature: FreeFeature.mockTest),
-            Text('টেস্ট টাইপ সিলেক্ট করুন',
+            Text(context.l10n!.selectTestType,
                 style: Theme.of(context).textTheme.bodyMedium),
             const Gap(10),
             TestTypeSelector(
@@ -294,20 +294,19 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
                   setState(() => selectedQuestionType = value),
             ),
             const Gap(10),
-            Text('প্রশ্নের স্ট্যান্ডার্ড',
+            Text(context.l10n!.questionStandard,
                 style: Theme.of(context).textTheme.bodyMedium),
             const Gap(10),
             QuestionStandardSelector(
               selectedStandard: selectedStandard,
               onStandardChanged: (value) => setState(() {
                 selectedStandard = value;
-                selectedSubjects = [
-                  SelectedSubjectAndChapter(subject: "সাবজেক্ট সিলেক্ট করুন")
-                ];
+                selectedSubjects = [SelectedSubjectAndChapter(subject: "")];
               }),
             ),
             const Gap(10),
-            Text('সাবজেক্ট*', style: Theme.of(context).textTheme.bodyMedium),
+            Text('${context.l10n!.subject}*',
+                style: Theme.of(context).textTheme.bodyMedium),
             const Gap(10),
             ...selectedSubjects.asMap().entries.map((entry) {
               final index = entry.key;
@@ -333,7 +332,7 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
                             data: (subjects) {
                               final availableSubjects = subjects;
                               final dropdownSubjects = [
-                                "সাবজেক্ট সিলেক্ট করুন",
+                                "",
                                 ...availableSubjects
                               ];
 
@@ -347,18 +346,19 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
                                                 .isEmpty ||
                                             !dropdownSubjects.contains(
                                                 selectedSubjects[index].subject)
-                                        ? "সাবজেক্ট সিলেক্ট করুন"
+                                        ? ""
                                         : selectedSubjects[index].subject,
                                     items: dropdownSubjects
                                         .map((subject) =>
                                             DropdownMenuItem<String>(
                                               value: subject,
-                                              child: Text(subject),
+                                              child: Text(subject.isEmpty
+                                                  ? context.l10n!.selectSubject
+                                                  : subject),
                                             ))
                                         .toList(),
                                     onChanged: (value) {
-                                      if (value != null &&
-                                          value != "সাবজেক্ট সিলেক্ট করুন") {
+                                      if (value != null && value.isNotEmpty) {
                                         setState(() {
                                           selectedSubjects[index].subject =
                                               value;
@@ -372,11 +372,9 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
                                   const SizedBox(height: 10),
 
                                   // Chapter Dropdown (shown only if subject selected)
-                                  if (selectedSubjects[index].subject !=
-                                          "সাবজেক্ট সিলেক্ট করুন" &&
-                                      selectedSubjects[index]
-                                          .subject
-                                          .isNotEmpty)
+                                  if (selectedSubjects[index]
+                                      .subject
+                                      .isNotEmpty)
                                     ref
                                         .watch(chapterViewmodelProvider(
                                             selectedSubjects[index].subject))
@@ -473,28 +471,27 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
             const Gap(10),
             TextButton.icon(
               onPressed: () => setState(() {
-                selectedSubjects.add(SelectedSubjectAndChapter(
-                    subject: "সাবজেক্ট সিলেক্ট করুন"));
+                selectedSubjects.add(SelectedSubjectAndChapter(subject: ""));
               }),
-              label: Text("আরেকটি বিষয় যোগ করুন",
+              label: Text(context.l10n!.addAnotherSubject,
                   style: Theme.of(context).textTheme.bodyMedium),
               icon: Icon(CupertinoIcons.plus_app,
                   color: Theme.of(context).colorScheme.onSurface),
             ),
             const Gap(10),
-            Text("প্রশ্ন সংখ্যা",
+            Text(context.l10n!.questionCount,
                 style: Theme.of(context).textTheme.bodyMedium),
             const Gap(10),
             TextField(
               controller: questionCountController,
               keyboardType: TextInputType.number,
               decoration:
-                  const InputDecoration(hintText: "প্রশ্ন সংখ্যা সিলেক্ট করুন"),
+                  InputDecoration(hintText: context.l10n!.selectQuestionCount),
             ),
             const Gap(10),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text("নেগেটিভ মার্কিং",
+              title: Text(context.l10n!.negativeMarking,
                   style: Theme.of(context).textTheme.bodyMedium),
               value: isNegativeMarking,
               activeColor: Theme.of(context).colorScheme.onSecondary,
@@ -502,15 +499,16 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
               onChanged: (value) => setState(() => isNegativeMarking = value),
             ),
             const Gap(10),
-            Text("সময়", style: Theme.of(context).textTheme.bodyMedium),
+            Text(context.l10n!.testDuration,
+                style: Theme.of(context).textTheme.bodyMedium),
             const Gap(16),
             Row(
               children: [
-                _buildTimeInputField(hourController, "ঘন্টা"),
+                _buildTimeInputField(hourController, context.l10n!.hours),
                 const Gap(16),
-                _buildTimeInputField(minuteController, "মিনিট"),
+                _buildTimeInputField(minuteController, context.l10n!.minutes),
                 const Gap(16),
-                _buildTimeInputField(secondController, "সেকেন্ড"),
+                _buildTimeInputField(secondController, context.l10n!.seconds),
               ],
             ),
             const Gap(20),
@@ -518,7 +516,7 @@ class _MockTestLandingViewState extends ConsumerState<MockTestLandingView>
               onPressed: selectedQuestionType == "MCQ"
                   ? _startMCQMockTest
                   : _startWrittenMockTest,
-              text: "টেস্ট শুরু করুন",
+              text: context.l10n!.startTest,
             ),
           ],
         ),

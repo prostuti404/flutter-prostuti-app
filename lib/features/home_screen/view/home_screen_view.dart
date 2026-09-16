@@ -130,7 +130,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           : AppColors.textTertiaryLight,
                       BlendMode.srcIn),
                 ),
-                label: "হোম",
+                label: context.l10n!.home,
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
@@ -143,7 +143,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           : AppColors.textTertiaryLight,
                       BlendMode.srcATop),
                 ),
-                label: "ফ্ল্যাশ কার্ড",
+                label: context.l10n!.flashCard,
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
@@ -156,7 +156,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           : AppColors.textTertiaryLight,
                       BlendMode.srcIn),
                 ),
-                label: "ম্যাসেজ",
+                label: context.l10n!.message,
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
@@ -169,7 +169,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           : AppColors.textTertiaryLight,
                       BlendMode.srcIn),
                 ),
-                label: "টেস্ট",
+                label: context.l10n!.test,
               ),
               BottomNavigationBarItem(
                 icon: Badge(
@@ -190,7 +190,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         BlendMode.srcIn),
                   ),
                 ),
-                label: "নটিফিকেশন",
+                label: context.l10n!.notification,
               ),
             ]),
       ),
@@ -246,9 +246,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   .animate()
                   .moveX(begin: 20, end: 0, duration: 500.ms),
               const Gap(16),
-              _buildSectionHeader(context, "আমার ফ্ল্যাশকার্ড")
-                  .animate()
-                  .moveX(begin: -20, end: 0, duration: 400.ms),
+              _buildSectionHeader(
+                context,
+                context.l10n!.myFlashcards,
+                onSeeMore: () => _handleTabChange(1),
+              ).animate().moveX(begin: -20, end: 0, duration: 400.ms),
               const Gap(8),
               _buildFlashcardSection(maxWidth)
                   .animate()
@@ -487,7 +489,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'সার্চ করুন.....',
+                            context.l10n!.searchHint,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyLarge!
@@ -776,7 +778,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title) {
+  Widget _buildSectionHeader(BuildContext context, String title,
+      {VoidCallback? onSeeMore}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
@@ -790,13 +793,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 .copyWith(fontWeight: FontWeight.w600),
           ),
           TextButton(
-            onPressed: () {
-              if (title == "আমার ফ্ল্যাশকার্ড") {
-                _handleTabChange(1);
-              }
-            },
+            onPressed: onSeeMore,
             child: Text(
-              "আরো দেখুন",
+              context.l10n!.seeMore,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.w500,
                   color: AppColors.textTertiaryLight),

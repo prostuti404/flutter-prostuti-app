@@ -244,6 +244,75 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mockTest => 'Mock Test';
 
   @override
+  String get segmentTest => 'Segment Test';
+
+  @override
+  String get segmentTestDescription => 'Select each of the details below accurately for your goal-oriented test.';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get quizer => 'Quizer';
+
+  @override
+  String get selectTestType => 'Select Test Type';
+
+  @override
+  String get testTypeDescription => 'Test is everything about your preparation in one place - mock tests, segment tests, quizer. Choose, take the test, see the results, and learn from your mistakes. Make preparation easier and more effective!';
+
+  @override
+  String get questionStandard => 'Question Standard';
+
+  @override
+  String get addAnotherSubject => 'Add Another Subject';
+
+  @override
+  String get questionCount => 'Number of Questions';
+
+  @override
+  String get selectQuestionCount => 'Select number of questions';
+
+  @override
+  String get negativeMarking => 'Negative Marking';
+
+  @override
+  String get testDuration => 'Time';
+
+  @override
+  String get hours => 'Hours';
+
+  @override
+  String get minutes => 'Minutes';
+
+  @override
+  String get seconds => 'Seconds';
+
+  @override
+  String get startTest => 'Start Test';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get errorTitle => 'Error!';
+
+  @override
+  String get selectAtLeastOneSubject => 'Please select at least one subject.';
+
+  @override
+  String get enterValidQuestionCount => 'Please enter the number of questions correctly.';
+
+  @override
+  String get enterValidTime => 'Please enter the time correctly.';
+
+  @override
+  String get questionTypeFilterLabel => 'Select Question Type*';
+
+  @override
+  String get selectAtLeastOneQuestionType => 'Please select at least one question type.';
+
+  @override
   String get clearYourDoubts => 'Clear Your Doubts';
 
   @override
@@ -760,6 +829,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myCalendar => 'My Calendar';
 
   @override
+  String get myFlashcards => 'My Flashcards';
+
+  @override
   String get routineLoadError => 'Failed to Load Activities';
 
   @override
@@ -1168,4 +1240,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noSubscriptionPlans => 'No subscription plans are available right now';
+
+  @override
+  String get faqAskQuestion => 'Ask a Question';
+
+  @override
+  String get faqQuestion1 => 'How do I buy a test course?';
+
+  @override
+  String get faqAnswer1 => 'To buy a subscription plan in the Prostuti app, log in to your account, go to the \"Subscription\" menu, choose the plan you prefer (1 month, 3 months, 6 months, or 12 months), and pay using our secure payment gateway. Once subscribed, you will have access to all test courses, study materials, and other premium features.';
+
+  @override
+  String get faqQuestion2 => 'How do I create a flashcard?';
+
+  @override
+  String get faqAnswer2 => 'To create a flashcard in the Prostuti app, log in to your account, go to the \"Flashcard\" section, tap the \"Create New Flashcard\" button, enter your question and answer, and tap \"Save\". You can later edit, organize, and study the flashcards you have created.';
+
+  @override
+  String get faqQuestion3 => 'Which features can I use after my subscription ends?';
+
+  @override
+  String get faqAnswer3 => 'Even after your subscription ends, you can still use the following features: the test system, unlimited doubt solving, unlimited flashcards, and some pre-recorded courses. However, to access premium content and new courses you will need to subscribe again.';
+
+  @override
+  String get faqQuestion4 => 'What is the refund policy?';
+
+  @override
+  String get faqAnswer4 => 'Once a subscription is purchased, there is no option to cancel or get a refund except where required by law. Before subscribing, please review all the necessary information about our test courses and services. If you have any questions, contact our support team before subscribing.';
+
+  @override
+  String get faqQuestion5 => 'Does the Prostuti app store my personal information?';
+
+  @override
+  String get faqAnswer5 => 'Yes, we store your personal information and keep it secure. We collect your name, email, phone number, payment details, study interests, profile information, and academic history. We do not share your information with any other third parties, except service providers such as payment processors and cloud service providers who help us operate our platform.';
 }

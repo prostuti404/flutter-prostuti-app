@@ -244,6 +244,75 @@ class AppLocalizationsBn extends AppLocalizations {
   String get mockTest => 'মক টেস্ট';
 
   @override
+  String get segmentTest => 'সেগমেন্ট টেস্ট';
+
+  @override
+  String get segmentTestDescription => 'আপনার লক্ষ্যভিত্তিক পরীক্ষার জন্য নিচের প্রতিটি তথ্য নির্ভুলভাবে নির্বাচন করুন।';
+
+  @override
+  String get next => 'পরবর্তী';
+
+  @override
+  String get quizer => 'কুইজার';
+
+  @override
+  String get selectTestType => 'টেস্টের ধরণ সিলেক্ট করুন';
+
+  @override
+  String get testTypeDescription => 'টেস্ট হলো আপনার প্রস্তুতির সবকিছু এক জায়গায় - মক টেস্ট, সেগমেন্ট টেস্ট, কুইজার। নির্বাচন করুন, পরীক্ষা দিন, ফলাফল দেখুন, ভুলগুলো থেকে শিখুন। প্রস্তুতি হোক আরও সহজ ও কার্যকর!';
+
+  @override
+  String get questionStandard => 'প্রশ্নের স্ট্যান্ডার্ড';
+
+  @override
+  String get addAnotherSubject => 'আরেকটি বিষয় যোগ করুন';
+
+  @override
+  String get questionCount => 'প্রশ্ন সংখ্যা';
+
+  @override
+  String get selectQuestionCount => 'প্রশ্ন সংখ্যা সিলেক্ট করুন';
+
+  @override
+  String get negativeMarking => 'নেগেটিভ মার্কিং';
+
+  @override
+  String get testDuration => 'সময়';
+
+  @override
+  String get hours => 'ঘন্টা';
+
+  @override
+  String get minutes => 'মিনিট';
+
+  @override
+  String get seconds => 'সেকেন্ড';
+
+  @override
+  String get startTest => 'টেস্ট শুরু করুন';
+
+  @override
+  String get ok => 'ঠিক আছে';
+
+  @override
+  String get errorTitle => 'ত্রুটি!';
+
+  @override
+  String get selectAtLeastOneSubject => 'কমপক্ষে একটি বিষয় সিলেক্ট করুন।';
+
+  @override
+  String get enterValidQuestionCount => 'প্রশ্ন সংখ্যাটি সঠিকভাবে লিখুন।';
+
+  @override
+  String get enterValidTime => 'সময়টি সঠিকভাবে লিখুন।';
+
+  @override
+  String get questionTypeFilterLabel => 'প্রশ্নের ধরণ সিলেক্ট করুন*';
+
+  @override
+  String get selectAtLeastOneQuestionType => 'কমপক্ষে একটি প্রশ্নের ধরণ সিলেক্ট করুন।';
+
+  @override
   String get clearYourDoubts => 'ক্লিয়ার ইউর ডাউটস';
 
   @override
@@ -760,6 +829,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get myCalendar => 'আমার ক্যালেন্ডার';
 
   @override
+  String get myFlashcards => 'আমার ফ্ল্যাশকার্ড';
+
+  @override
   String get routineLoadError => 'কার্যক্রম লোড করতে ত্রুটি';
 
   @override
@@ -1168,4 +1240,37 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get noSubscriptionPlans => 'এই মুহূর্তে কোনো সাবস্ক্রিপশন প্ল্যান পাওয়া যাচ্ছে না';
+
+  @override
+  String get faqAskQuestion => 'প্রশ্ন করুন';
+
+  @override
+  String get faqQuestion1 => 'টেস্ট কোর্স কিভাবে কিনবো?';
+
+  @override
+  String get faqAnswer1 => 'প্রস্তুতি অ্যাপে সাবস্ক্রিপশন প্ল্যান কিনতে, আপনার অ্যাকাউন্টে লগইন করুন, \"সাবস্ক্রিপশন\" মেনুতে যান, আপনার পছন্দের প্ল্যান (১ মাস, ৩ মাস, ৬ মাস, অথবা ১২ মাস) নির্বাচন করুন, এবং আমাদের নিরাপদ পেমেন্ট গেটওয়ে ব্যবহার করে অর্থপ্রদান করুন। সাবস্ক্রিপশন কেনার পরে, আপনি সমস্ত টেস্ট কোর্স, স্টাডি মেটেরিয়াল এবং অন্যান্য প্রিমিয়াম সুবিধাগুলি অ্যাক্সেস করতে পারবেন।';
+
+  @override
+  String get faqQuestion2 => 'ফ্লাশ কার্ড কীভাবে তৈরি করবো?';
+
+  @override
+  String get faqAnswer2 => 'প্রস্তুতি অ্যাপে ফ্লাশ কার্ড তৈরি করতে, আপনার অ্যাকাউন্টে লগইন করুন, \"ফ্লাশ কার্ড\" সেকশনে যান, \"নতুন কার্ড তৈরি করুন\" বাটনে ক্লিক করুন, আপনার প্রশ্ন এবং উত্তর লিখুন, এবং \"সংরক্ষণ করুন\" বাটনে ক্লিক করুন। আপনি পরবর্তীতে আপনার তৈরি করা ফ্লাশ কার্ডগুলি সম্পাদনা, অর্গানাইজ, এবং অধ্যয়ন করতে পারবেন।';
+
+  @override
+  String get faqQuestion3 => 'সাবস্ক্রিপশন শেষ হলে কী কী ফিচার ব্যবহার করতে পারব?';
+
+  @override
+  String get faqAnswer3 => 'আপনার সাবস্ক্রিপশন শেষ হওয়ার পরেও, আপনি নিম্নলিখিত ফিচারগুলি ব্যবহার করতে পারবেন: টেস্ট সিস্টেম, অসীমিত ডাউট সলভিং, অসীমিত ফ্লাশকার্ড ব্যবহার, এবং কিছু প্রি-রেকর্ডেড কোর্স। তবে, প্রিমিয়াম কন্টেন্ট এবং নতুন কোর্স অ্যাক্সেস করতে আপনাকে আবার সাবস্ক্রাইব করতে হবে।';
+
+  @override
+  String get faqQuestion4 => 'রিফান্ড পলিসি কী?';
+
+  @override
+  String get faqAnswer4 => 'একবার সাবস্ক্রিপশন কেনা হলে, আইন দ্বারা প্রয়োজনীয় ক্ষেত্র ছাড়া বাতিলকরণ বা রিফান্ডের কোনো বিকল্প নেই। সাবস্ক্রাইব করার আগে, আমাদের টেস্ট কোর্স এবং পরিষেবাগুলি সম্পর্কে সমস্ত প্রয়োজনীয় তথ্য দেখে নিন। কোনো প্রশ্ন থাকলে, সাবস্ক্রাইব করার আগে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।';
+
+  @override
+  String get faqQuestion5 => 'প্রস্তুতি অ্যাপ কি আমার ব্যক্তিগত তথ্য সংরক্ষণ করে?';
+
+  @override
+  String get faqAnswer5 => 'হ্যাঁ, আমরা আপনার ব্যক্তিগত তথ্য সংরক্ষণ করি এবং এটি সুরক্ষিত রাখি। আমরা আপনার নাম, ইমেইল, ফোন নম্বর, পেমেন্ট তথ্য, স্টাডি ইন্টারেস্ট, প্রোফাইল তথ্য এবং একাডেমিক হিস্ট্রি সংগ্রহ করি। আমরা আপনার তথ্য অন্য কোনো তৃতীয় পক্ষের সাথে শেয়ার করি না, কেবল পেমেন্ট প্রসেসর এবং ক্লাউড সার্ভিস প্রোভাইডারদের মতো সেবা প্রদানকারীদের সাথে শেয়ার করি যারা আমাদের প্ল্যাটফর্ম পরিচালনায় সাহায্য করে।';
 }

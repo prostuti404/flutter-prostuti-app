@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:prostuti/core/services/localization_service.dart';
 
 class FlashcardEmptyState extends StatelessWidget {
   final String message;
@@ -42,7 +43,7 @@ class FlashcardEmptyState extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text('ফ্লাশকার্ড তৈরি করুন',
+              child: Text(context.l10n!.createFlashcard,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: Theme.of(context).scaffoldBackgroundColor)),
             ),

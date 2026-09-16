@@ -93,14 +93,14 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
     switch (_selectedType) {
       case 'Academic':
         return _buildFormField(
-          label: context.l10n?.division ?? 'ক্লাস*',
+          label: context.l10n!.division,
           child: categoriesAsync.when(
             data: (categories) {
               final divisions = ref
                   .read(categoriesProvider.notifier)
                   .getUniqueDivisions(categories);
               return _buildDropdown(
-                hint: context.l10n?.selectDivision ?? 'নবম শ্রেণী',
+                hint: context.l10n!.selectDivision,
                 value: _selectedDivision,
                 items: divisions,
                 onChanged: (newValue) {
@@ -280,7 +280,7 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: commonAppbar("সেগমেন্ট টেস্ট"),
+      appBar: commonAppbar(context.l10n!.segmentTest),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: Container(
@@ -292,7 +292,7 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
           child: Column(
             children: [
               Text(
-                'আপনার লক্ষ্যভিত্তিক পরীক্ষার জন্য নিচের প্রতিটি তথ্য নির্ভুলভাবে নির্বাচন করুন।',
+                context.l10n!.segmentTestDescription,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
@@ -302,7 +302,7 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
                 data: (data) {
                   _selectedType = data;
                   return _buildFormField(
-                    label: context.l10n?.course ?? 'কোর্স*',
+                    label: context.l10n!.course,
                     child: categoriesAsync.when(
                       data: (categories) {
                         final types = ref
@@ -335,7 +335,7 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
 
               // Subject field
               _buildFormField(
-                label: context.l10n?.subject ?? 'সাবজেক্ট*',
+                label: context.l10n!.subject,
                 child: categoriesAsync.when(
                   data: (categories) {
                     final subjects = _selectedType != null
@@ -355,7 +355,7 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
                             )
                         : <String>[];
                     return _buildDropdown(
-                      hint: context.l10n?.selectSubject ?? 'বিজ্ঞান',
+                      hint: context.l10n!.selectSubject,
                       value: _selectedSubject,
                       items: subjects,
                       onChanged: (newValue) {
@@ -373,7 +373,7 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
 
               LongButton(
                 onPressed: _startSegmentTest,
-                text: "পরবর্তী",
+                text: context.l10n!.next,
               ),
             ],
           ),
