@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:prostuti/core/services/size_config.dart';
 
 import '../model/flashcard_model.dart';
 import '../viewmodel/flashcard_item_count_provider.dart';
@@ -95,148 +94,162 @@ class FlashcardItem extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (studySessions > 0)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 4),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.onSecondary,
-                              borderRadius: BorderRadius.circular(16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (studySessions > 0)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 4),
+                              decoration: BoxDecoration(
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.trending_up,
+                                    color: isDarkMode
+                                        ? Colors.black
+                                        : Colors.white,
+                                    size: 18,
+                                  ),
+                                  const Gap(8),
+                                  Text(
+                                    'Today $studySessions times studied',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: isDarkMode
+                                                ? Colors.black
+                                                : Colors.white),
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.trending_up,
-                                  color:
-                                      isDarkMode ? Colors.black : Colors.white,
-                                  size: 18,
-                                ),
-                                const Gap(8),
-                                Text(
-                                  'Today $studySessions times studied',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: isDarkMode
-                                              ? Colors.black
-                                              : Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                        const Gap(8),
-                        // Flashcard title
-                        SizedBox(
-                          width: SizeConfig.screenWidth * 0.65,
-                          child: Text(
+                          const Gap(8),
+                          // Flashcard title
+                          Text(
                             flashcard.title ?? 'Untitled Flashcard',
                             style: Theme.of(context).textTheme.titleMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ),
 
-                        const Gap(16),
+                          const Gap(16),
 
-                        // Author info and study status
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Author info
-                            Row(
-                              children: [
-                                // Avatar with gradient background
-                                Container(
-                                  padding: const EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Theme.of(context).colorScheme.primary,
-                                        Theme.of(context).colorScheme.secondary,
-                                      ],
+                          // Author info and study status
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Author info
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    // Avatar with gradient background
+                                    Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ],
+                                        ),
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 14,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondary,
+                                        child: CircleAvatar(
+                                          radius: 12,
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.1),
+                                          child: Text(
+                                            (flashcard.studentId?.name
+                                                        ?.isNotEmpty ==
+                                                    true)
+                                                ? flashcard.studentId!.name![0]
+                                                    .toUpperCase()
+                                                : 'U',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 14,
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondary,
-                                    child: CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .primary
-                                          .withOpacity(0.1),
+
+                                    const Gap(8),
+
+                                    Flexible(
                                       child: Text(
-                                        (flashcard.studentId?.name
-                                                    ?.isNotEmpty ==
-                                                true)
-                                            ? flashcard.studentId!.name![0]
-                                                .toUpperCase()
-                                            : 'U',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                        ),
+                                        flashcard.studentId?.name ?? 'Unknown',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-
-                                const Gap(8),
-
-                                Text(
-                                  flashcard.studentId?.name ?? 'Unknown',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                ),
-                              ],
-                            ),
-
-                            const Gap(10),
-                            // Study indicator for unstudied cards
-                            if (studySessions == 0)
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.play_circle_outline,
-                                    size: 18,
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                  ),
-                                  const Gap(4),
-                                  Text(
-                                    'Tap to study',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall!
-                                        .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                        ),
-                                  ),
-                                ],
                               ),
-                          ],
-                        ),
-                      ],
+
+                              const Gap(10),
+                              // Study indicator for unstudied cards
+                              if (studySessions == 0)
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.play_circle_outline,
+                                      size: 18,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
+                                    const Gap(4),
+                                    Text(
+                                      'Tap to study',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
+                    const Gap(8),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
