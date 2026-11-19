@@ -35,9 +35,9 @@ class CreateFlashcardViewState extends ConsumerState<CreateFlashcardView>
   final List<FlashcardItemFormField> _flashcardItems = [];
 
   // Add new fields to track selected category details for display
-  String? _selectedCategoryType;
-  String? _selectedCategoryDivision;
+  String? _selectedCategoryGroup;
   String? _selectedCategorySubject;
+  String? _selectedCategoryLesson;
 
   @override
   void initState() {
@@ -57,9 +57,9 @@ class CreateFlashcardViewState extends ConsumerState<CreateFlashcardView>
       if (settings.visibility != null && settings.visibility!.isNotEmpty) {
         _visibility = settings.visibility!;
       }
-      _selectedCategoryType = settings.categoryType;
-      _selectedCategoryDivision = settings.categoryDivision;
+      _selectedCategoryGroup = settings.categoryGroup;
       _selectedCategorySubject = settings.categorySubject;
+      _selectedCategoryLesson = settings.categoryLesson;
     });
   }
 
@@ -467,16 +467,16 @@ class CreateFlashcardViewState extends ConsumerState<CreateFlashcardView>
     }
 
     final parts = <String>[];
-    if (_selectedCategoryType != null && _selectedCategoryType!.isNotEmpty) {
-      parts.add(_selectedCategoryType!);
-    }
-    if (_selectedCategoryDivision != null &&
-        _selectedCategoryDivision!.isNotEmpty) {
-      parts.add(_selectedCategoryDivision!);
+    if (_selectedCategoryGroup != null && _selectedCategoryGroup!.isNotEmpty) {
+      parts.add(_selectedCategoryGroup!);
     }
     if (_selectedCategorySubject != null &&
         _selectedCategorySubject!.isNotEmpty) {
       parts.add(_selectedCategorySubject!);
+    }
+    if (_selectedCategoryLesson != null &&
+        _selectedCategoryLesson!.isNotEmpty) {
+      parts.add(_selectedCategoryLesson!);
     }
 
     return Text(parts.join(' > '));
@@ -507,9 +507,9 @@ class CreateFlashcardViewState extends ConsumerState<CreateFlashcardView>
 
                 setState(() {
                   _categoryId = categoryId;
-                  _selectedCategoryType = selectedCategory.type;
-                  _selectedCategoryDivision = selectedCategory.division;
+                  _selectedCategoryGroup = selectedCategory.group;
                   _selectedCategorySubject = selectedCategory.subject;
+                  _selectedCategoryLesson = selectedCategory.lesson;
                 });
 
                 // Important: Update the modal UI with the new selection

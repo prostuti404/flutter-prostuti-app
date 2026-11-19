@@ -6,7 +6,7 @@ part of 'flashcard_filter_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$flashcardFilterHash() => r'962553642407ab59158fbc3fded3f057bea3bb74';
+String _$flashcardFilterHash() => r'de8f462d0163c73722b045f6a3a56ba76d87f525';
 
 /// See also [FlashcardFilter].
 @ProviderFor(FlashcardFilter)
@@ -22,9 +22,11 @@ final flashcardFilterProvider =
 );
 
 typedef _$FlashcardFilter = Notifier<FilterState>;
-String _$categoriesHash() => r'3cc549836004e310983a9b9091ee5a98aca47a15';
+String _$categoriesHash() => r'370b4945069c6ef595521525e39754c6de5e7e3b';
 
-/// See also [Categories].
+/// Categories that actually have content (`onlyCreated=true&limit=0`).
+///
+/// Copied from [Categories].
 @ProviderFor(Categories)
 final categoriesProvider =
     AsyncNotifierProvider<Categories, List<Category>>.internal(
