@@ -2617,6 +2617,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yes, we store your personal information and keep it secure. We collect your name, email, phone number, payment details, study interests, profile information, and academic history. We do not share your information with any other third parties, except service providers such as payment processors and cloud service providers who help us operate our platform.'**
   String get faqAnswer5;
+
+  /// No description provided for @group.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get group;
+
+  /// No description provided for @lesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson'**
+  String get lesson;
+
+  /// No description provided for @noGroupsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No groups available'**
+  String get noGroupsAvailable;
+
+  /// No description provided for @noLessonsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No lessons available for this selection'**
+  String get noLessonsAvailable;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes your account and all your data. This cannot be undone.'**
+  String get deleteAccountMessage;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get accountDeleted;
 }
 
 class _AppLocalizationsDelegate

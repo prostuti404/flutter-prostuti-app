@@ -7,7 +7,7 @@ part of 'flashcard_settings_viewmodel.dart';
 // **************************************************************************
 
 String _$flashcardSettingsNotifierHash() =>
-    r'1a6478679287426f010d006c21780619fdcaa362';
+    r'8ddc7a6793d09d7d5e5f3faed1016c91c30d5713';
 
 /// See also [FlashcardSettingsNotifier].
 @ProviderFor(FlashcardSettingsNotifier)

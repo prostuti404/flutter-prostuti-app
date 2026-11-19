@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart' show Right;
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,10 +8,12 @@ import 'package:prostuti/common/widgets/common_widgets/common_widgets.dart';
 import 'package:prostuti/core/services/localization_service.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
+import '../../../core/services/error_response.dart';
 import '../../../core/services/nav.dart';
 import '../../../core/services/size_config.dart';
 import '../../home_screen/view/home_screen_view.dart';
 import '../model/flashcard_details_model.dart';
+import '../repository/flashcard_repo.dart';
 import '../services/flashcard_tracker.dart';
 import '../viewmodel/flashcard_details_viewmodel.dart';
 import '../viewmodel/flashcard_favourite_viewmodel.dart';
@@ -81,6 +84,22 @@ class FlashcardStudyViewState extends ConsumerState<FlashcardStudyView>
       if (items.isNotEmpty) {
         final actualIndex = index % items.length;
         final item = items[actualIndex];
+
+        // Persist the learn/known swipe once per card per session. Failures
+        // are non-fatal: studying must keep working if tracking cannot sync.
+        final swipeDirection = switch (direction) {
+          SwipeDirection.right => 'right',
+          SwipeDirection.left => 'left',
+          _ => null,
+        };
+        if (swipeDirection != null &&
+            item.sId != null &&
+            !_tracker.processedCardIds.contains(item.sId)) {
+          ref
+              .read(flashcardRepoProvider)
+              .swipeFlashcardItem(item.sId!, swipeDirection)
+              .catchError((Object _) => const Right<ErrorResponse, bool>(false));
+        }
 
         // Record the swipe in the tracker
         _tracker.recordSwipe(item.sId!, direction);

@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -192,10 +190,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordRequired => 'Password is required';
 
   @override
-  String get passwordValidationMessage => 'Password must contain at least one uppercase letter, one special character, and be at least 8 characters long';
+  String get passwordValidationMessage =>
+      'Password must contain at least one uppercase letter, one special character, and be at least 8 characters long';
 
   @override
-  String get passwordMinLengthMessage => 'Password must be at least 6 characters long';
+  String get passwordMinLengthMessage =>
+      'Password must be at least 6 characters long';
 
   @override
   String get category => 'Category';
@@ -249,7 +249,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get segmentTest => 'Segment Test';
 
   @override
-  String get segmentTestDescription => 'Select each of the details below accurately for your goal-oriented test.';
+  String get segmentTestDescription =>
+      'Select each of the details below accurately for your goal-oriented test.';
 
   @override
   String get next => 'Next';
@@ -261,7 +262,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectTestType => 'Select Test Type';
 
   @override
-  String get testTypeDescription => 'Test is everything about your preparation in one place - mock tests, segment tests, quizer. Choose, take the test, see the results, and learn from your mistakes. Make preparation easier and more effective!';
+  String get testTypeDescription =>
+      'Test is everything about your preparation in one place - mock tests, segment tests, quizer. Choose, take the test, see the results, and learn from your mistakes. Make preparation easier and more effective!';
 
   @override
   String get questionStandard => 'Question Standard';
@@ -303,7 +305,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectAtLeastOneSubject => 'Please select at least one subject.';
 
   @override
-  String get enterValidQuestionCount => 'Please enter the number of questions correctly.';
+  String get enterValidQuestionCount =>
+      'Please enter the number of questions correctly.';
 
   @override
   String get enterValidTime => 'Please enter the time correctly.';
@@ -312,13 +315,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get questionTypeFilterLabel => 'Select Question Type*';
 
   @override
-  String get selectAtLeastOneQuestionType => 'Please select at least one question type.';
+  String get selectAtLeastOneQuestionType =>
+      'Please select at least one question type.';
 
   @override
   String get clearYourDoubts => 'Clear Your Doubts';
 
   @override
-  String get onboardingDesc => 'Practice, build your skills, and boost your confidence. Start your journey to success today!';
+  String get onboardingDesc =>
+      'Practice, build your skills, and boost your confidence. Start your journey to success today!';
 
   @override
   String get getStarted => 'Get Started';
@@ -450,16 +455,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forOneMonth => 'for 1 month';
 
   @override
-  String get alreadyActiveSubscription => 'You already have an active subscription';
+  String get alreadyActiveSubscription =>
+      'You already have an active subscription';
 
   @override
   String get upgradeToPremiumTitle => 'Upgrade to Premium?';
 
   @override
-  String get premiumIntroDescription => 'Prostuti Premium gives you unlimited access to all courses, mock tests, flashcards, and direct conversations with tutors, so you can prepare with everything you need in one place.';
+  String get premiumIntroDescription =>
+      'Prostuti Premium gives you unlimited access to all courses, mock tests, flashcards, and direct conversations with tutors, so you can prepare with everything you need in one place.';
 
   @override
-  String get premiumTagline => 'Everything you need to prepare, in one subscription';
+  String get premiumTagline =>
+      'Everything you need to prepare, in one subscription';
 
   @override
   String get whyUpgradeTitle => 'Why should you upgrade?';
@@ -468,25 +476,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get benefitCoursesTitle => 'Access to all courses';
 
   @override
-  String get benefitCoursesDesc => 'Unlock every current and upcoming course, along with all of its lessons and materials.';
+  String get benefitCoursesDesc =>
+      'Unlock every current and upcoming course, along with all of its lessons and materials.';
 
   @override
   String get benefitMockTestsTitle => 'Unlimited mock tests';
 
   @override
-  String get benefitMockTestsDesc => 'Practice with unlimited mock tests, quizzes, and segment tests to track your progress.';
+  String get benefitMockTestsDesc =>
+      'Practice with unlimited mock tests, quizzes, and segment tests to track your progress.';
 
   @override
   String get benefitFlashcardsTitle => 'Flashcards for quick revision';
 
   @override
-  String get benefitFlashcardsDesc => 'Revise faster with flashcards covering every subject and topic.';
+  String get benefitFlashcardsDesc =>
+      'Revise faster with flashcards covering every subject and topic.';
 
   @override
   String get benefitTutorChatTitle => 'Direct chat with tutors';
 
   @override
-  String get benefitTutorChatDesc => 'Get your doubts cleared by chatting directly with tutors whenever you need help.';
+  String get benefitTutorChatDesc =>
+      'Get your doubts cleared by chatting directly with tutors whenever you need help.';
 
   @override
   String get price => 'Price';
@@ -1226,7 +1238,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trialEndedTitle => 'Your free trial has ended';
 
   @override
-  String get trialEndedMessage => 'Subscribe to keep taking mock tests, watching recorded classes and preparing without limits.';
+  String get trialEndedMessage =>
+      'Subscribe to keep taking mock tests, watching recorded classes and preparing without limits.';
 
   @override
   String get trialLimitReachedTitle => 'Free mock test limit reached';
@@ -1251,7 +1264,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get noSubscriptionPlans => 'No subscription plans are available right now';
+  String get noSubscriptionPlans =>
+      'No subscription plans are available right now';
 
   @override
   String get faqAskQuestion => 'Ask a Question';
@@ -1260,29 +1274,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faqQuestion1 => 'How do I buy a test course?';
 
   @override
-  String get faqAnswer1 => 'To buy a subscription plan in the Prostuti app, log in to your account, go to the \"Subscription\" menu, choose the plan you prefer (1 month, 3 months, 6 months, or 12 months), and pay using our secure payment gateway. Once subscribed, you will have access to all test courses, study materials, and other premium features.';
+  String get faqAnswer1 =>
+      'To buy a subscription plan in the Prostuti app, log in to your account, go to the \"Subscription\" menu, choose the plan you prefer (1 month, 3 months, 6 months, or 12 months), and pay using our secure payment gateway. Once subscribed, you will have access to all test courses, study materials, and other premium features.';
 
   @override
   String get faqQuestion2 => 'How do I create a flashcard?';
 
   @override
-  String get faqAnswer2 => 'To create a flashcard in the Prostuti app, log in to your account, go to the \"Flashcard\" section, tap the \"Create New Flashcard\" button, enter your question and answer, and tap \"Save\". You can later edit, organize, and study the flashcards you have created.';
+  String get faqAnswer2 =>
+      'To create a flashcard in the Prostuti app, log in to your account, go to the \"Flashcard\" section, tap the \"Create New Flashcard\" button, enter your question and answer, and tap \"Save\". You can later edit, organize, and study the flashcards you have created.';
 
   @override
-  String get faqQuestion3 => 'Which features can I use after my subscription ends?';
+  String get faqQuestion3 =>
+      'Which features can I use after my subscription ends?';
 
   @override
-  String get faqAnswer3 => 'Even after your subscription ends, you can still use the following features: the test system, unlimited doubt solving, unlimited flashcards, and some pre-recorded courses. However, to access premium content and new courses you will need to subscribe again.';
+  String get faqAnswer3 =>
+      'Even after your subscription ends, you can still use the following features: the test system, unlimited doubt solving, unlimited flashcards, and some pre-recorded courses. However, to access premium content and new courses you will need to subscribe again.';
 
   @override
   String get faqQuestion4 => 'What is the refund policy?';
 
   @override
-  String get faqAnswer4 => 'Once a subscription is purchased, there is no option to cancel or get a refund except where required by law. Before subscribing, please review all the necessary information about our test courses and services. If you have any questions, contact our support team before subscribing.';
+  String get faqAnswer4 =>
+      'Once a subscription is purchased, there is no option to cancel or get a refund except where required by law. Before subscribing, please review all the necessary information about our test courses and services. If you have any questions, contact our support team before subscribing.';
 
   @override
-  String get faqQuestion5 => 'Does the Prostuti app store my personal information?';
+  String get faqQuestion5 =>
+      'Does the Prostuti app store my personal information?';
 
   @override
-  String get faqAnswer5 => 'Yes, we store your personal information and keep it secure. We collect your name, email, phone number, payment details, study interests, profile information, and academic history. We do not share your information with any other third parties, except service providers such as payment processors and cloud service providers who help us operate our platform.';
+  String get faqAnswer5 =>
+      'Yes, we store your personal information and keep it secure. We collect your name, email, phone number, payment details, study interests, profile information, and academic history. We do not share your information with any other third parties, except service providers such as payment processors and cloud service providers who help us operate our platform.';
+
+  @override
+  String get group => 'Group';
+
+  @override
+  String get lesson => 'Lesson';
+
+  @override
+  String get noGroupsAvailable => 'No groups available';
+
+  @override
+  String get noLessonsAvailable => 'No lessons available for this selection';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountTitle => 'Delete your account?';
+
+  @override
+  String get deleteAccountMessage =>
+      'This permanently deletes your account and all your data. This cannot be undone.';
+
+  @override
+  String get accountDeleted => 'Account deleted successfully';
 }

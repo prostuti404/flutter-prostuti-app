@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -135,7 +133,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get loadingMore => 'আরও লোড হচ্ছে...';
 
   @override
-  String get noFlashcardItems => 'এই সেটের জন্য কোন ফ্ল্যাশকার্ড আইটেম পাওয়া যায়নি';
+  String get noFlashcardItems =>
+      'এই সেটের জন্য কোন ফ্ল্যাশকার্ড আইটেম পাওয়া যায়নি';
 
   @override
   String get swipeLeftToLearn => 'শিখতে বামে সোয়াইপ করুন';
@@ -192,7 +191,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get passwordRequired => 'পাসওয়ার্ড প্রয়োজন';
 
   @override
-  String get passwordValidationMessage => 'পাসওয়ার্ডে কমপক্ষে একটি বড় হাতের অক্ষর, একটি বিশেষ চিহ্ন এবং ৮ অক্ষর থাকতে হবে';
+  String get passwordValidationMessage =>
+      'পাসওয়ার্ডে কমপক্ষে একটি বড় হাতের অক্ষর, একটি বিশেষ চিহ্ন এবং ৮ অক্ষর থাকতে হবে';
 
   @override
   String get passwordMinLengthMessage => 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে';
@@ -249,7 +249,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get segmentTest => 'সেগমেন্ট টেস্ট';
 
   @override
-  String get segmentTestDescription => 'আপনার লক্ষ্যভিত্তিক পরীক্ষার জন্য নিচের প্রতিটি তথ্য নির্ভুলভাবে নির্বাচন করুন।';
+  String get segmentTestDescription =>
+      'আপনার লক্ষ্যভিত্তিক পরীক্ষার জন্য নিচের প্রতিটি তথ্য নির্ভুলভাবে নির্বাচন করুন।';
 
   @override
   String get next => 'পরবর্তী';
@@ -261,7 +262,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get selectTestType => 'টেস্টের ধরণ সিলেক্ট করুন';
 
   @override
-  String get testTypeDescription => 'টেস্ট হলো আপনার প্রস্তুতির সবকিছু এক জায়গায় - মক টেস্ট, সেগমেন্ট টেস্ট, কুইজার। নির্বাচন করুন, পরীক্ষা দিন, ফলাফল দেখুন, ভুলগুলো থেকে শিখুন। প্রস্তুতি হোক আরও সহজ ও কার্যকর!';
+  String get testTypeDescription =>
+      'টেস্ট হলো আপনার প্রস্তুতির সবকিছু এক জায়গায় - মক টেস্ট, সেগমেন্ট টেস্ট, কুইজার। নির্বাচন করুন, পরীক্ষা দিন, ফলাফল দেখুন, ভুলগুলো থেকে শিখুন। প্রস্তুতি হোক আরও সহজ ও কার্যকর!';
 
   @override
   String get questionStandard => 'প্রশ্নের স্ট্যান্ডার্ড';
@@ -312,13 +314,15 @@ class AppLocalizationsBn extends AppLocalizations {
   String get questionTypeFilterLabel => 'প্রশ্নের ধরণ সিলেক্ট করুন*';
 
   @override
-  String get selectAtLeastOneQuestionType => 'কমপক্ষে একটি প্রশ্নের ধরণ সিলেক্ট করুন।';
+  String get selectAtLeastOneQuestionType =>
+      'কমপক্ষে একটি প্রশ্নের ধরণ সিলেক্ট করুন।';
 
   @override
   String get clearYourDoubts => 'ক্লিয়ার ইউর ডাউটস';
 
   @override
-  String get onboardingDesc => 'অনুশীলন করুন, দক্ষতা গড়ুন, আত্মবিশ্বাস বাড়ান। আপনার সাফল্যের যাত্রা শুরু হোক আজ থেকেই!';
+  String get onboardingDesc =>
+      'অনুশীলন করুন, দক্ষতা গড়ুন, আত্মবিশ্বাস বাড়ান। আপনার সাফল্যের যাত্রা শুরু হোক আজ থেকেই!';
 
   @override
   String get getStarted => 'শুরু করুন';
@@ -450,16 +454,19 @@ class AppLocalizationsBn extends AppLocalizations {
   String get forOneMonth => '১ মাসের জন্য';
 
   @override
-  String get alreadyActiveSubscription => 'আপনার ইতিমধ্যে একটি সক্রিয় সাবস্ক্রিপশন আছে';
+  String get alreadyActiveSubscription =>
+      'আপনার ইতিমধ্যে একটি সক্রিয় সাবস্ক্রিপশন আছে';
 
   @override
   String get upgradeToPremiumTitle => 'প্রিমিয়ামে আপগ্রেড করুন?';
 
   @override
-  String get premiumIntroDescription => 'প্রস্তুতি প্রিমিয়াম আপনাকে দেয় সকল কোর্স, মক টেস্ট, ফ্ল্যাশকার্ড এবং টিউটরদের সাথে সরাসরি কথা বলার সুযোগ, যাতে প্রস্তুতির জন্য প্রয়োজনীয় সবকিছু আপনি এক জায়গাতেই পেয়ে যান।';
+  String get premiumIntroDescription =>
+      'প্রস্তুতি প্রিমিয়াম আপনাকে দেয় সকল কোর্স, মক টেস্ট, ফ্ল্যাশকার্ড এবং টিউটরদের সাথে সরাসরি কথা বলার সুযোগ, যাতে প্রস্তুতির জন্য প্রয়োজনীয় সবকিছু আপনি এক জায়গাতেই পেয়ে যান।';
 
   @override
-  String get premiumTagline => 'প্রস্তুতির জন্য প্রয়োজনীয় সবকিছু, একটি সাবস্ক্রিপশনেই';
+  String get premiumTagline =>
+      'প্রস্তুতির জন্য প্রয়োজনীয় সবকিছু, একটি সাবস্ক্রিপশনেই';
 
   @override
   String get whyUpgradeTitle => 'আপনি কেনো আপগ্রেড করবেন?';
@@ -468,25 +475,29 @@ class AppLocalizationsBn extends AppLocalizations {
   String get benefitCoursesTitle => 'সকল কোর্সে অ্যাক্সেস';
 
   @override
-  String get benefitCoursesDesc => 'বর্তমান ও আসন্ন সকল কোর্স, তার লেসন ও ম্যাটেরিয়ালসহ ব্যবহার করুন।';
+  String get benefitCoursesDesc =>
+      'বর্তমান ও আসন্ন সকল কোর্স, তার লেসন ও ম্যাটেরিয়ালসহ ব্যবহার করুন।';
 
   @override
   String get benefitMockTestsTitle => 'সীমাহীন মক টেস্ট';
 
   @override
-  String get benefitMockTestsDesc => 'সীমাহীন মক টেস্ট, কুইজ ও সেগমেন্ট টেস্ট দিয়ে অনুশীলন করে নিজের অগ্রগতি যাচাই করুন।';
+  String get benefitMockTestsDesc =>
+      'সীমাহীন মক টেস্ট, কুইজ ও সেগমেন্ট টেস্ট দিয়ে অনুশীলন করে নিজের অগ্রগতি যাচাই করুন।';
 
   @override
   String get benefitFlashcardsTitle => 'দ্রুত রিভিশনের জন্য ফ্ল্যাশকার্ড';
 
   @override
-  String get benefitFlashcardsDesc => 'প্রতিটি বিষয় ও টপিকের ফ্ল্যাশকার্ড দিয়ে দ্রুত রিভিশন করুন।';
+  String get benefitFlashcardsDesc =>
+      'প্রতিটি বিষয় ও টপিকের ফ্ল্যাশকার্ড দিয়ে দ্রুত রিভিশন করুন।';
 
   @override
   String get benefitTutorChatTitle => 'টিউটরদের সাথে সরাসরি চ্যাট';
 
   @override
-  String get benefitTutorChatDesc => 'প্রয়োজনে টিউটরদের সাথে সরাসরি চ্যাট করে আপনার সমস্যার সমাধান নিন।';
+  String get benefitTutorChatDesc =>
+      'প্রয়োজনে টিউটরদের সাথে সরাসরি চ্যাট করে আপনার সমস্যার সমাধান নিন।';
 
   @override
   String get price => 'মূল্য';
@@ -1228,7 +1239,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get trialEndedTitle => 'আপনার ফ্রি ট্রায়াল শেষ হয়েছে';
 
   @override
-  String get trialEndedMessage => 'মক টেস্ট, রেকর্ডেড ক্লাস অব্যাহত রাখতে এবং সীমাহীন প্রস্তুতি নিতে সাবস্ক্রাইব করুন।';
+  String get trialEndedMessage =>
+      'মক টেস্ট, রেকর্ডেড ক্লাস অব্যাহত রাখতে এবং সীমাহীন প্রস্তুতি নিতে সাবস্ক্রাইব করুন।';
 
   @override
   String get trialLimitReachedTitle => 'ফ্রি মক টেস্টের সীমা শেষ';
@@ -1253,7 +1265,8 @@ class AppLocalizationsBn extends AppLocalizations {
   }
 
   @override
-  String get noSubscriptionPlans => 'এই মুহূর্তে কোনো সাবস্ক্রিপশন প্ল্যান পাওয়া যাচ্ছে না';
+  String get noSubscriptionPlans =>
+      'এই মুহূর্তে কোনো সাবস্ক্রিপশন প্ল্যান পাওয়া যাচ্ছে না';
 
   @override
   String get faqAskQuestion => 'প্রশ্ন করুন';
@@ -1262,29 +1275,61 @@ class AppLocalizationsBn extends AppLocalizations {
   String get faqQuestion1 => 'টেস্ট কোর্স কিভাবে কিনবো?';
 
   @override
-  String get faqAnswer1 => 'প্রস্তুতি অ্যাপে সাবস্ক্রিপশন প্ল্যান কিনতে, আপনার অ্যাকাউন্টে লগইন করুন, \"সাবস্ক্রিপশন\" মেনুতে যান, আপনার পছন্দের প্ল্যান (১ মাস, ৩ মাস, ৬ মাস, অথবা ১২ মাস) নির্বাচন করুন, এবং আমাদের নিরাপদ পেমেন্ট গেটওয়ে ব্যবহার করে অর্থপ্রদান করুন। সাবস্ক্রিপশন কেনার পরে, আপনি সমস্ত টেস্ট কোর্স, স্টাডি মেটেরিয়াল এবং অন্যান্য প্রিমিয়াম সুবিধাগুলি অ্যাক্সেস করতে পারবেন।';
+  String get faqAnswer1 =>
+      'প্রস্তুতি অ্যাপে সাবস্ক্রিপশন প্ল্যান কিনতে, আপনার অ্যাকাউন্টে লগইন করুন, \"সাবস্ক্রিপশন\" মেনুতে যান, আপনার পছন্দের প্ল্যান (১ মাস, ৩ মাস, ৬ মাস, অথবা ১২ মাস) নির্বাচন করুন, এবং আমাদের নিরাপদ পেমেন্ট গেটওয়ে ব্যবহার করে অর্থপ্রদান করুন। সাবস্ক্রিপশন কেনার পরে, আপনি সমস্ত টেস্ট কোর্স, স্টাডি মেটেরিয়াল এবং অন্যান্য প্রিমিয়াম সুবিধাগুলি অ্যাক্সেস করতে পারবেন।';
 
   @override
   String get faqQuestion2 => 'ফ্লাশ কার্ড কীভাবে তৈরি করবো?';
 
   @override
-  String get faqAnswer2 => 'প্রস্তুতি অ্যাপে ফ্লাশ কার্ড তৈরি করতে, আপনার অ্যাকাউন্টে লগইন করুন, \"ফ্লাশ কার্ড\" সেকশনে যান, \"নতুন কার্ড তৈরি করুন\" বাটনে ক্লিক করুন, আপনার প্রশ্ন এবং উত্তর লিখুন, এবং \"সংরক্ষণ করুন\" বাটনে ক্লিক করুন। আপনি পরবর্তীতে আপনার তৈরি করা ফ্লাশ কার্ডগুলি সম্পাদনা, অর্গানাইজ, এবং অধ্যয়ন করতে পারবেন।';
+  String get faqAnswer2 =>
+      'প্রস্তুতি অ্যাপে ফ্লাশ কার্ড তৈরি করতে, আপনার অ্যাকাউন্টে লগইন করুন, \"ফ্লাশ কার্ড\" সেকশনে যান, \"নতুন কার্ড তৈরি করুন\" বাটনে ক্লিক করুন, আপনার প্রশ্ন এবং উত্তর লিখুন, এবং \"সংরক্ষণ করুন\" বাটনে ক্লিক করুন। আপনি পরবর্তীতে আপনার তৈরি করা ফ্লাশ কার্ডগুলি সম্পাদনা, অর্গানাইজ, এবং অধ্যয়ন করতে পারবেন।';
 
   @override
-  String get faqQuestion3 => 'সাবস্ক্রিপশন শেষ হলে কী কী ফিচার ব্যবহার করতে পারব?';
+  String get faqQuestion3 =>
+      'সাবস্ক্রিপশন শেষ হলে কী কী ফিচার ব্যবহার করতে পারব?';
 
   @override
-  String get faqAnswer3 => 'আপনার সাবস্ক্রিপশন শেষ হওয়ার পরেও, আপনি নিম্নলিখিত ফিচারগুলি ব্যবহার করতে পারবেন: টেস্ট সিস্টেম, অসীমিত ডাউট সলভিং, অসীমিত ফ্লাশকার্ড ব্যবহার, এবং কিছু প্রি-রেকর্ডেড কোর্স। তবে, প্রিমিয়াম কন্টেন্ট এবং নতুন কোর্স অ্যাক্সেস করতে আপনাকে আবার সাবস্ক্রাইব করতে হবে।';
+  String get faqAnswer3 =>
+      'আপনার সাবস্ক্রিপশন শেষ হওয়ার পরেও, আপনি নিম্নলিখিত ফিচারগুলি ব্যবহার করতে পারবেন: টেস্ট সিস্টেম, অসীমিত ডাউট সলভিং, অসীমিত ফ্লাশকার্ড ব্যবহার, এবং কিছু প্রি-রেকর্ডেড কোর্স। তবে, প্রিমিয়াম কন্টেন্ট এবং নতুন কোর্স অ্যাক্সেস করতে আপনাকে আবার সাবস্ক্রাইব করতে হবে।';
 
   @override
   String get faqQuestion4 => 'রিফান্ড পলিসি কী?';
 
   @override
-  String get faqAnswer4 => 'একবার সাবস্ক্রিপশন কেনা হলে, আইন দ্বারা প্রয়োজনীয় ক্ষেত্র ছাড়া বাতিলকরণ বা রিফান্ডের কোনো বিকল্প নেই। সাবস্ক্রাইব করার আগে, আমাদের টেস্ট কোর্স এবং পরিষেবাগুলি সম্পর্কে সমস্ত প্রয়োজনীয় তথ্য দেখে নিন। কোনো প্রশ্ন থাকলে, সাবস্ক্রাইব করার আগে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।';
+  String get faqAnswer4 =>
+      'একবার সাবস্ক্রিপশন কেনা হলে, আইন দ্বারা প্রয়োজনীয় ক্ষেত্র ছাড়া বাতিলকরণ বা রিফান্ডের কোনো বিকল্প নেই। সাবস্ক্রাইব করার আগে, আমাদের টেস্ট কোর্স এবং পরিষেবাগুলি সম্পর্কে সমস্ত প্রয়োজনীয় তথ্য দেখে নিন। কোনো প্রশ্ন থাকলে, সাবস্ক্রাইব করার আগে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।';
 
   @override
-  String get faqQuestion5 => 'প্রস্তুতি অ্যাপ কি আমার ব্যক্তিগত তথ্য সংরক্ষণ করে?';
+  String get faqQuestion5 =>
+      'প্রস্তুতি অ্যাপ কি আমার ব্যক্তিগত তথ্য সংরক্ষণ করে?';
 
   @override
-  String get faqAnswer5 => 'হ্যাঁ, আমরা আপনার ব্যক্তিগত তথ্য সংরক্ষণ করি এবং এটি সুরক্ষিত রাখি। আমরা আপনার নাম, ইমেইল, ফোন নম্বর, পেমেন্ট তথ্য, স্টাডি ইন্টারেস্ট, প্রোফাইল তথ্য এবং একাডেমিক হিস্ট্রি সংগ্রহ করি। আমরা আপনার তথ্য অন্য কোনো তৃতীয় পক্ষের সাথে শেয়ার করি না, কেবল পেমেন্ট প্রসেসর এবং ক্লাউড সার্ভিস প্রোভাইডারদের মতো সেবা প্রদানকারীদের সাথে শেয়ার করি যারা আমাদের প্ল্যাটফর্ম পরিচালনায় সাহায্য করে।';
+  String get faqAnswer5 =>
+      'হ্যাঁ, আমরা আপনার ব্যক্তিগত তথ্য সংরক্ষণ করি এবং এটি সুরক্ষিত রাখি। আমরা আপনার নাম, ইমেইল, ফোন নম্বর, পেমেন্ট তথ্য, স্টাডি ইন্টারেস্ট, প্রোফাইল তথ্য এবং একাডেমিক হিস্ট্রি সংগ্রহ করি। আমরা আপনার তথ্য অন্য কোনো তৃতীয় পক্ষের সাথে শেয়ার করি না, কেবল পেমেন্ট প্রসেসর এবং ক্লাউড সার্ভিস প্রোভাইডারদের মতো সেবা প্রদানকারীদের সাথে শেয়ার করি যারা আমাদের প্ল্যাটফর্ম পরিচালনায় সাহায্য করে।';
+
+  @override
+  String get group => 'গ্রুপ';
+
+  @override
+  String get lesson => 'পাঠ';
+
+  @override
+  String get noGroupsAvailable => 'কোনো গ্রুপ পাওয়া যায়নি';
+
+  @override
+  String get noLessonsAvailable => 'এই নির্বাচনের জন্য কোনো পাঠ নেই';
+
+  @override
+  String get deleteAccount => 'অ্যাকাউন্ট মুছুন';
+
+  @override
+  String get deleteAccountTitle => 'আপনার অ্যাকাউন্ট মুছে ফেলবেন?';
+
+  @override
+  String get deleteAccountMessage =>
+      'এটি আপনার অ্যাকাউন্ট ও সমস্ত তথ্য স্থায়ীভাবে মুছে ফেলবে। এটি আর ফিরিয়ে আনা যাবে না।';
+
+  @override
+  String get accountDeleted => 'অ্যাকাউন্ট সফলভাবে মুছে ফেলা হয়েছে';
 }

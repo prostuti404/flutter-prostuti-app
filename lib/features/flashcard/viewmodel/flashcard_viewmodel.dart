@@ -27,12 +27,12 @@ class ExploreFlashcards extends _$ExploreFlashcards {
 
     _allFlashcards = await _fetchFlashcards(
       page: 1,
-      categoryType:
-          filterState.isFilterActive ? filterState.selectedType : null,
-      categoryDivision:
-          filterState.isFilterActive ? filterState.selectedDivision : null,
+      categoryGroup:
+          filterState.isFilterActive ? filterState.selectedGroup : null,
       categorySubject:
           filterState.isFilterActive ? filterState.selectedSubject : null,
+      categoryLesson:
+          filterState.isFilterActive ? filterState.selectedLesson : null,
     );
     _filteredFlashcards = _allFlashcards;
     _currentPage = 1;
@@ -43,17 +43,17 @@ class ExploreFlashcards extends _$ExploreFlashcards {
   Future<List<Flashcard>> _fetchFlashcards({
     required int page,
     int limit = 10,
-    String? categoryType,
-    String? categoryDivision,
+    String? categoryGroup,
     String? categorySubject,
+    String? categoryLesson,
   }) async {
     final response = await ref.read(flashcardRepoProvider).getAllFlashcards(
           page: page,
           limit: limit,
           visibility: "EVERYONE",
-          categoryType: categoryType,
-          categoryDivision: categoryDivision,
+          categoryGroup: categoryGroup,
           categorySubject: categorySubject,
+          categoryLesson: categoryLesson,
         );
 
     return response.fold(
@@ -83,12 +83,12 @@ class ExploreFlashcards extends _$ExploreFlashcards {
       final nextPage = _currentPage + 1;
       final moreFlashcards = await _fetchFlashcards(
         page: nextPage,
-        categoryType:
-            filterState.isFilterActive ? filterState.selectedType : null,
-        categoryDivision:
-            filterState.isFilterActive ? filterState.selectedDivision : null,
+        categoryGroup:
+            filterState.isFilterActive ? filterState.selectedGroup : null,
         categorySubject:
             filterState.isFilterActive ? filterState.selectedSubject : null,
+        categoryLesson:
+            filterState.isFilterActive ? filterState.selectedLesson : null,
       );
 
       if (moreFlashcards.isNotEmpty) {

@@ -55,7 +55,7 @@ class MyCourseRepo {
   // Add this method to the MyCourseRepo class
 
   Future<CourseDetails> getCourseDetails(String courseId) async {
-    final response = await _dioService.getRequest("/courses/$courseId");
+    final response = await _dioService.getRequest("/course/preview/$courseId");
 
     if (response.statusCode == 200) {
       return CourseDetails.fromJson(response.data);

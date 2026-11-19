@@ -6,7 +6,7 @@ part of 'flashcard_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$exploreFlashcardsHash() => r'3f31d1d2f3eb67e072a5576b334e6a3c763ff6fd';
+String _$exploreFlashcardsHash() => r'a8b71b111c197d076dc3dd527b5bbcb09e389486';
 
 /// See also [ExploreFlashcards].
 @ProviderFor(ExploreFlashcards)

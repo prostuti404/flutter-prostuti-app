@@ -131,7 +131,9 @@ class NewPasswordViewState extends ConsumerState<NewPasswordView> {
 
                           final payload = {
                             "otpCode": ref.read(otpProvider),
-                            "phone": ref.read(phoneNumberProvider),
+                            // Same "+88" form that was used to send and verify
+                            // the OTP, so the backend matches the account.
+                            "phone": "+88${ref.read(phoneNumberProvider)}",
                             "newPassword": _passwordController.text,
                             "confirmNewPassword":
                                 _confirmPasswordController.text,
