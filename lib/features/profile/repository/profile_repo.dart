@@ -26,6 +26,26 @@ class ProfileRepo {
 
   ProfileRepo(this._dioService);
 
+  /// Permanently deletes the signed-in student's account
+  /// (`DELETE /student/delete-account`, no body). Required for store policies.
+  Future<Either<ErrorResponse, bool>> deleteAccount() async {
+    try {
+      final response = await _dioService.deleteRequest("/student/delete-account");
+
+      if (response.statusCode == 200) {
+        return const Right(true);
+      } else {
+        final errorResponse = ErrorResponse.fromJson(response.data);
+        ErrorHandler().setErrorMessage(errorResponse.message);
+        return Left(errorResponse);
+      }
+    } catch (e) {
+      final errorResponse = ErrorResponse(message: e.toString(), success: false);
+      ErrorHandler().setErrorMessage(errorResponse.message);
+      return Left(errorResponse);
+    }
+  }
+
   Future<Either<ErrorResponse, bool>> changePassword({
     required String oldPassword,
     required String newPassword,

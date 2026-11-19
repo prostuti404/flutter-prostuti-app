@@ -7,6 +7,8 @@ import '../model/category_model.dart';
 import '../viewmodel/flashcard_filter_viewmodel.dart';
 import '../viewmodel/flashcard_settings_viewmodel.dart';
 
+/// Picks the single category (Group -> Subject -> Lesson) a flashcard deck is
+/// linked to via `categoryId`.
 class CategoryPicker extends ConsumerStatefulWidget {
   final Function(String) onCategorySelected;
   final VoidCallback onClose;
@@ -23,14 +25,9 @@ class CategoryPicker extends ConsumerStatefulWidget {
 
 class _CategoryPickerState extends ConsumerState<CategoryPicker>
     with SingleTickerProviderStateMixin {
-  String? _selectedType;
-  String? _selectedDivision;
-  String? _selectedJobType;
-  String? _selectedJobName;
-  String? _selectedUniversityType;
-  String? _selectedUniversityName;
-  String? _selectedUnit;
+  String? _selectedGroup;
   String? _selectedSubject;
+  String? _selectedLesson;
   String? _selectedCategoryId;
 
   late AnimationController _animationController;
@@ -41,7 +38,6 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
     super.initState();
     _initializeFromSettings();
 
-    // Initialize animation controller
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -63,10 +59,11 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
 
   Future<void> _initializeFromSettings() async {
     final settings = await ref.read(flashcardSettingsNotifierProvider.future);
+    if (!mounted) return;
     setState(() {
-      _selectedType = settings.categoryType;
-      _selectedDivision = settings.categoryDivision;
+      _selectedGroup = settings.categoryGroup;
       _selectedSubject = settings.categorySubject;
+      _selectedLesson = settings.categoryLesson;
       _selectedCategoryId = settings.categoryId;
     });
   }
@@ -76,15 +73,13 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
       _selectedCategoryId = category.sId;
     });
 
-    // Save settings
     ref.read(flashcardSettingsNotifierProvider.notifier).setCategoryDetails(
           categoryId: category.sId,
-          categoryType: _selectedType,
-          categoryDivision: _selectedDivision,
-          categorySubject: _selectedSubject,
+          categoryGroup: category.group,
+          categorySubject: category.subject,
+          categoryLesson: category.lesson,
         );
 
-    // Notify parent
     widget.onCategorySelected(category.sId!);
   }
 
@@ -157,118 +152,27 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
 
   Widget _buildContent(BuildContext context, List<Category> categories) {
     final notifier = ref.read(categoriesProvider.notifier);
-
-    // Get unique values for filters
-    final types = notifier.getUniqueTypes(categories);
-
-    // Build filter state for getUniqueSubjects
-    final filterState = FilterState(
-      selectedType: _selectedType,
-      selectedDivision: _selectedDivision,
-      selectedJobType: _selectedJobType,
-      selectedJobName: _selectedJobName,
-      selectedUniversityType: _selectedUniversityType,
-      selectedUniversityName: _selectedUniversityName,
-      selectedUnit: _selectedUnit,
-    );
-
-    // Get dependent filter options based on type
-    final List<String> secondLevelOptions;
-    final List<String> thirdLevelOptions;
-    final List<String> fourthLevelOptions;
-    final subjects = _selectedType != null
-        ? notifier.getUniqueSubjects(categories, filterState)
-        : <String>[];
-
-    switch (_selectedType) {
-      case 'Academic':
-        secondLevelOptions = notifier.getUniqueDivisions(categories);
-        thirdLevelOptions = [];
-        fourthLevelOptions = [];
-        break;
-      case 'Job':
-        secondLevelOptions = notifier.getUniqueJobTypes(categories);
-        thirdLevelOptions = _selectedJobType != null
-            ? notifier.getUniqueJobNames(categories, _selectedJobType)
-            : [];
-        fourthLevelOptions = [];
-        break;
-      case 'Admission':
-        secondLevelOptions = notifier.getUniqueUniversityTypes(categories);
-        thirdLevelOptions = _selectedUniversityType == 'University'
-            ? notifier.getUniqueUniversityNames(
-                categories, _selectedUniversityType)
-            : [];
-        fourthLevelOptions = _selectedUniversityType == 'University' &&
-                _selectedUniversityName != null
-            ? notifier.getUniqueUnits(
-                categories, _selectedUniversityType, _selectedUniversityName)
-            : [];
-        break;
-      default:
-        secondLevelOptions = [];
-        thirdLevelOptions = [];
-        fourthLevelOptions = [];
-    }
-
-    // Filter categories based on selections
-    List<Category> filteredCategories = categories;
-    if (_selectedType != null) {
-      filteredCategories =
-          filteredCategories.where((c) => c.type == _selectedType).toList();
-
-      switch (_selectedType) {
-        case 'Academic':
-          if (_selectedDivision != null) {
-            filteredCategories = filteredCategories
-                .where((c) => c.division == _selectedDivision)
-                .toList();
-          }
-          break;
-        case 'Job':
-          if (_selectedJobType != null) {
-            filteredCategories = filteredCategories
-                .where((c) => c.jobType == _selectedJobType)
-                .toList();
-          }
-          if (_selectedJobName != null) {
-            filteredCategories = filteredCategories
-                .where((c) => c.jobName == _selectedJobName)
-                .toList();
-          }
-          break;
-        case 'Admission':
-          if (_selectedUniversityType != null) {
-            filteredCategories = filteredCategories
-                .where((c) => c.universityType == _selectedUniversityType)
-                .toList();
-          }
-          if (_selectedUniversityName != null) {
-            filteredCategories = filteredCategories
-                .where((c) => c.universityName == _selectedUniversityName)
-                .toList();
-          }
-          if (_selectedUnit != null) {
-            filteredCategories = filteredCategories
-                .where((c) => c.unit == _selectedUnit)
-                .toList();
-          }
-          break;
-      }
-
-      if (_selectedSubject != null) {
-        filteredCategories = filteredCategories
-            .where((c) => c.subject == _selectedSubject)
-            .toList();
-      }
-    }
-
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
+    final groups = notifier.getUniqueGroups(categories);
+    final subjects = notifier.getUniqueSubjects(categories, _selectedGroup);
+    final lessons =
+        notifier.getUniqueLessons(categories, _selectedGroup, _selectedSubject);
+
+    final filteredCategories = categories.where((c) {
+      if (_selectedGroup != null && c.group != _selectedGroup) return false;
+      if (_selectedSubject != null && c.subject != _selectedSubject) {
+        return false;
+      }
+      if (_selectedLesson != null && c.lesson != _selectedLesson) return false;
+      return true;
+    }).toList();
+
+    final hasFilter = _selectedGroup != null;
+
     return Column(
       children: [
-        // Filter chips with modern design
         Container(
           constraints: const BoxConstraints(maxHeight: 120),
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -286,126 +190,49 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
             physics: const BouncingScrollPhysics(),
             child: Row(
               children: [
-                // Type filter
                 _buildFilterDropdown(
                   context,
-                  context.l10n!.type,
+                  context.l10n!.group,
                   Icons.category_outlined,
-                  _selectedType,
-                  types,
+                  _selectedGroup,
+                  groups,
                   (value) {
                     setState(() {
-                      _selectedType = value;
-                      // Reset all dependent filters
-                      _selectedDivision = null;
-                      _selectedJobType = null;
-                      _selectedJobName = null;
-                      _selectedUniversityType = null;
-                      _selectedUniversityName = null;
-                      _selectedUnit = null;
+                      _selectedGroup = value;
                       _selectedSubject = null;
+                      _selectedLesson = null;
                       _selectedCategoryId = null;
                     });
                   },
                 ),
-
-                // Second level filter (Division/JobType/UniversityType)
-                if (_selectedType != null && secondLevelOptions.isNotEmpty) ...[
-                  const Gap(8),
-                  _buildFilterDropdown(
-                    context,
-                    _selectedType == 'Academic'
-                        ? context.l10n!.division
-                        : _selectedType == 'Job'
-                            ? 'Job Type'
-                            : 'University Type',
-                    Icons.business_outlined,
-                    _selectedType == 'Academic'
-                        ? _selectedDivision
-                        : _selectedType == 'Job'
-                            ? _selectedJobType
-                            : _selectedUniversityType,
-                    secondLevelOptions,
-                    (value) {
-                      setState(() {
-                        switch (_selectedType) {
-                          case 'Academic':
-                            _selectedDivision = value;
-                            break;
-                          case 'Job':
-                            _selectedJobType = value;
-                            _selectedJobName = null;
-                            break;
-                          case 'Admission':
-                            _selectedUniversityType = value;
-                            _selectedUniversityName = null;
-                            _selectedUnit = null;
-                            break;
-                        }
-                        _selectedSubject = null;
-                        _selectedCategoryId = null;
-                      });
-                    },
-                  ),
-                ],
-
-                // Third level filter (JobName/UniversityName)
-                if (thirdLevelOptions.isNotEmpty) ...[
-                  const Gap(8),
-                  _buildFilterDropdown(
-                    context,
-                    _selectedType == 'Job' ? 'Job Name' : 'University',
-                    Icons.work_outline,
-                    _selectedType == 'Job'
-                        ? _selectedJobName
-                        : _selectedUniversityName,
-                    thirdLevelOptions,
-                    (value) {
-                      setState(() {
-                        if (_selectedType == 'Job') {
-                          _selectedJobName = value;
-                        } else {
-                          _selectedUniversityName = value;
-                          _selectedUnit = null;
-                        }
-                        _selectedSubject = null;
-                        _selectedCategoryId = null;
-                      });
-                    },
-                  ),
-                ],
-
-                // Fourth level filter (Unit)
-                if (fourthLevelOptions.isNotEmpty) ...[
-                  const Gap(8),
-                  _buildFilterDropdown(
-                    context,
-                    'Unit',
-                    Icons.school_outlined,
-                    _selectedUnit,
-                    fourthLevelOptions,
-                    (value) {
-                      setState(() {
-                        _selectedUnit = value;
-                        _selectedSubject = null;
-                        _selectedCategoryId = null;
-                      });
-                    },
-                  ),
-                ],
-
-                // Subject filter (last level for all types)
-                if (_selectedType != null && subjects.isNotEmpty) ...[
+                if (_selectedGroup != null && subjects.isNotEmpty) ...[
                   const Gap(8),
                   _buildFilterDropdown(
                     context,
                     context.l10n!.subject,
-                    Icons.subject_outlined,
+                    Icons.menu_book_outlined,
                     _selectedSubject,
                     subjects,
                     (value) {
                       setState(() {
                         _selectedSubject = value;
+                        _selectedLesson = null;
+                        _selectedCategoryId = null;
+                      });
+                    },
+                  ),
+                ],
+                if (_selectedSubject != null && lessons.isNotEmpty) ...[
+                  const Gap(8),
+                  _buildFilterDropdown(
+                    context,
+                    context.l10n!.lesson,
+                    Icons.bookmark_outline,
+                    _selectedLesson,
+                    lessons,
+                    (value) {
+                      setState(() {
+                        _selectedLesson = value;
                         _selectedCategoryId = null;
                       });
                     },
@@ -415,23 +242,13 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
             ),
           ),
         ),
-
-        const Gap(16),
-
-        // Categories heading
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(
             children: [
-              Text(
-                context.l10n!.category,
-                style: theme.textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Gap(8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.secondary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -446,18 +263,13 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
                 ),
               ),
               const Spacer(),
-              if (_selectedType != null)
+              if (hasFilter)
                 TextButton.icon(
                   onPressed: () {
                     setState(() {
-                      _selectedType = null;
-                      _selectedDivision = null;
-                      _selectedJobType = null;
-                      _selectedJobName = null;
-                      _selectedUniversityType = null;
-                      _selectedUniversityName = null;
-                      _selectedUnit = null;
+                      _selectedGroup = null;
                       _selectedSubject = null;
+                      _selectedLesson = null;
                       _selectedCategoryId = null;
                     });
                   },
@@ -483,8 +295,6 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
             ],
           ),
         ),
-
-        // Categories list
         Expanded(
           child: filteredCategories.isEmpty
               ? Center(
@@ -519,7 +329,7 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
                   duration: const Duration(milliseconds: 300),
                   child: ListView.builder(
                     key: ValueKey<String>(
-                        '${_selectedType}_${_selectedDivision}_${_selectedJobType}_${_selectedJobName}_${_selectedUniversityType}_${_selectedUniversityName}_${_selectedUnit}_${_selectedSubject}'),
+                        '${_selectedGroup}_${_selectedSubject}_$_selectedLesson'),
                     padding: const EdgeInsets.all(16),
                     physics: const BouncingScrollPhysics(),
                     itemCount: filteredCategories.length,
@@ -687,9 +497,9 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Subject as main title
+                      // "subject - lesson" as the main title
                       Text(
-                        category.subject ?? '',
+                        category.displayName,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight:
                               isSelected ? FontWeight.bold : FontWeight.w500,
@@ -700,79 +510,22 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker>
 
                       const Gap(4),
 
-                      // Type-specific chips
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
                         children: [
+                          if (category.group != null &&
+                              category.group!.isNotEmpty)
+                            _buildCategoryChip(
+                              category.group!,
+                              Icons.category_outlined,
+                              isSelected,
+                            ),
                           if (category.type != null &&
                               category.type!.isNotEmpty)
                             _buildCategoryChip(
                               category.type!,
-                              Icons.category_outlined,
-                              isSelected,
-                            ),
-
-                          // Academic specific
-                          if (category.type == 'Academic' &&
-                              category.division != null &&
-                              category.division!.isNotEmpty)
-                            _buildCategoryChip(
-                              category.division!,
-                              Icons.business_outlined,
-                              isSelected,
-                            ),
-
-                          // Job specific
-                          if (category.type == 'Job') ...[
-                            if (category.jobType != null &&
-                                category.jobType!.isNotEmpty)
-                              _buildCategoryChip(
-                                category.jobType!,
-                                Icons.work_outlined,
-                                isSelected,
-                              ),
-                            if (category.jobName != null &&
-                                category.jobName!.isNotEmpty)
-                              _buildCategoryChip(
-                                category.jobName!,
-                                Icons.business_center_outlined,
-                                isSelected,
-                              ),
-                          ],
-
-                          // Admission specific
-                          if (category.type == 'Admission') ...[
-                            if (category.universityType != null &&
-                                category.universityType!.isNotEmpty)
-                              _buildCategoryChip(
-                                category.universityType!,
-                                Icons.school_outlined,
-                                isSelected,
-                              ),
-                            if (category.universityName != null &&
-                                category.universityName!.isNotEmpty)
-                              _buildCategoryChip(
-                                category.universityName!,
-                                Icons.account_balance_outlined,
-                                isSelected,
-                              ),
-                            if (category.unit != null &&
-                                category.unit!.isNotEmpty)
-                              _buildCategoryChip(
-                                category.unit!,
-                                Icons.groups_outlined,
-                                isSelected,
-                              ),
-                          ],
-
-                          // Chapter (common)
-                          if (category.chapter != null &&
-                              category.chapter!.isNotEmpty &&
-                              category.chapter != 'All')
-                            _buildCategoryChip(
-                              category.chapter!,
-                              Icons.book_outlined,
+                              Icons.school_outlined,
                               isSelected,
                             ),
                         ],

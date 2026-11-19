@@ -35,13 +35,13 @@ class TestLandingView extends StatelessWidget with CommonWidgets {
           child: Column(
             children: [
               Text(
-                'টেস্টের ধরণ সিলেক্ট করুন',
+                context.l10n!.selectTestType,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               Gap(16),
               Text(
-                'টেস্ট হলো আপনার প্রস্তুতির সবকিছু এক জায়গায় - মক টেস্ট, সেগমেন্ট টেস্ট, কুইজার। নির্বাচন করুন, পরীক্ষা দিন, ফলাফল দেখুন, ভুলগুলো থেকে শিখুন। প্রস্তুতি হোক আরও সহজ ও কার্যকর!',
+                context.l10n!.testTypeDescription,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
@@ -53,7 +53,7 @@ class TestLandingView extends StatelessWidget with CommonWidgets {
                       borderRadius: BorderRadius.circular(8),
                       clipBehavior: Clip.antiAlias,
                       child: TestButton(
-                        label: 'সেগমেন্ট টেস্ট',
+                        label: context.l10n!.segmentTest,
                         borderColor: borderColor,
                         svgAsset: 'assets/images/segment_test_background.svg',
                         icon: 'assets/icons/segment_icon.png',
@@ -66,7 +66,7 @@ class TestLandingView extends StatelessWidget with CommonWidgets {
                   const Gap(12),
                   Expanded(
                     child: TestButton(
-                      label: 'মক-টেস্ট',
+                      label: context.l10n!.mockTest,
                       borderColor: borderColor,
                       svgAsset: 'assets/images/mock_test_background.svg',
                       icon: 'assets/icons/mock_icon.png',
@@ -79,7 +79,7 @@ class TestLandingView extends StatelessWidget with CommonWidgets {
               ),
               const Gap(12),
               TestButton(
-                label: 'কুইজার',
+                label: context.l10n!.quizer,
                 borderColor: borderColor,
                 svgAsset: 'assets/images/quizer_background.svg',
                 icon: 'assets/icons/quizer_icon.png',

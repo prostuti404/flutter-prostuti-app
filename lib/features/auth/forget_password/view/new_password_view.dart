@@ -38,10 +38,8 @@ class NewPasswordViewState extends ConsumerState<NewPasswordView> {
     if (value == null || value.isEmpty) {
       return context.l10n!.passwordRequired;
     }
-    // Password must contain at least one uppercase, one special character, and be at least 8 characters long
-    final passwordRegex = RegExp(r'^(?=.*?[A-Z])(?=.*?[!@#\$&*~]).{8,}$');
-    if (!passwordRegex.hasMatch(value)) {
-      return context.l10n!.passwordValidationMessage;
+    if (value.length < 6) {
+      return context.l10n!.passwordMinLengthMessage;
     }
     return null;
   }
@@ -133,7 +131,9 @@ class NewPasswordViewState extends ConsumerState<NewPasswordView> {
 
                           final payload = {
                             "otpCode": ref.read(otpProvider),
-                            "phone": ref.read(phoneNumberProvider),
+                            // Same "+88" form that was used to send and verify
+                            // the OTP, so the backend matches the account.
+                            "phone": "+88${ref.read(phoneNumberProvider)}",
                             "newPassword": _passwordController.text,
                             "confirmNewPassword":
                                 _confirmPasswordController.text,

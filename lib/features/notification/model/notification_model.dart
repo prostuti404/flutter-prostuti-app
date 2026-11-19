@@ -47,7 +47,7 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    studentId = json['student_id'];
+    studentId = json['student_id'] is String ? json['student_id'] : null;
     title = json['title'];
     message = json['message'];
     isRead = json['isRead'];

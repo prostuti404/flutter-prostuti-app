@@ -20,10 +20,19 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
+  /// Auto-advances the carousel. Held so it can be cancelled on dispose —
+  /// otherwise it keeps firing after "Get Started" replaces this screen and
+  /// drives a controller whose PageView no longer exists.
+  Timer? _autoAdvance;
+
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+    _autoAdvance = Timer.periodic(const Duration(seconds: 5), (_) {
+      // Guard as well as cancel: a tick already queued when the route is
+      // popped can still land after the PageView has detached.
+      if (!mounted || !_pageController.hasClients) return;
+
       if (_currentIndex < 1) {
         _currentIndex++;
       } else {
@@ -36,6 +45,13 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
         curve: Curves.easeIn,
       );
     });
+  }
+
+  @override
+  void dispose() {
+    _autoAdvance?.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -73,7 +89,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    "প্রস্তুতি অ্যাপে স্বাগতম! অনুশীলন করুন, দক্ষতা গড়ুন, আত্মবিশ্বাস বাড়ান। আপনার সাফল্যের যাত্রা শুরু হোক আজ থেকেই! প্রস্তুতি অ্যাপে স্বাগতম! অনুশীলন করুন, দক্ষতা বাড়ান, সাফল্য অর্জন করুন",
+                    "প্রস্তুতি অ্যাপে স্বাগতম! অনুশীলন করুন, দক্ষতা গড়ুন, আত্মবিশ্বাস বাড়ান। আপনার সাফল্যের যাত্রা শুরু হোক আজ থেকেই!",
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
@@ -105,7 +121,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    " ইন্টারঅ্যাকটিভ ফ্ল্যাশকার্ড, কুইজ এবং ডাউট সলভের মাধ্যমে সহজে শেখার অভিজ্ঞতা লাভ করুন। ইন্টারঅ্যাকটিভ পাঠ, কুইজ, এবং অনুশীলনের মাধ্যমে সহজে শেখার অভিজ্ঞতা নিন।",
+                    "ইন্টারঅ্যাকটিভ ফ্ল্যাশকার্ড, কুইজ এবং ডাউট সলভের মাধ্যমে সহজে শেখার অভিজ্ঞতা নিন।",
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme

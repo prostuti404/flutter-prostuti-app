@@ -13,21 +13,17 @@ class QuestionPatternViewmodel extends _$QuestionPatternViewmodel {
   }
 
   Future<QuestionPattern?> loadFirstQuestionPattern({
-    String? categoryType,
-    String? categoryDivision,
-    String? categoryUniversityType,
-    String? categoryUniversityName,
+    String? categoryGroup,
     String? categorySubject,
+    String? questionType,
   }) async {
     state = const AsyncLoading();
 
     try {
       final patterns = await ref.read(questionPatternRepoProvider).fetchQuestionPatterns(
-        categoryType: categoryType,
-        categoryDivision: categoryDivision,
-        categoryUniversityType: categoryUniversityType,
-        categoryUniversityName: categoryUniversityName,
+        categoryGroup: categoryGroup,
         categorySubject: categorySubject,
+        questionType: questionType,
       );
 
       final first = patterns.isNotEmpty ? patterns.first : null;

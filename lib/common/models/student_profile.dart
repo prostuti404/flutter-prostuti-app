@@ -28,6 +28,10 @@ class Data {
   String? studentId;
   String? name;
   String? categoryType;
+  String? mainCategory;
+  String? subCategory;
+  bool? isSubscribed;
+  String? trialStartDate;
 
   String? phone;
   String? email;
@@ -44,6 +48,10 @@ class Data {
       this.studentId,
       this.name,
       this.categoryType,
+      this.mainCategory,
+      this.subCategory,
+      this.isSubscribed,
+      this.trialStartDate,
       this.phone,
       this.email,
       this.enrolledCourses,
@@ -56,12 +64,22 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     userId = json['user_id'];
-    studentId = json['studentId'];
+    // The backend docs call this `registeredId`; live payloads use `studentId`.
+    studentId = (json['studentId'] ?? json['registeredId'])?.toString();
     name = json['name'];
     categoryType = json['categoryType'];
+    final category = json['category'];
+    if (category is Map<String, dynamic>) {
+      mainCategory = category['mainCategory'];
+      subCategory = category['subCategory'];
+    }
+    isSubscribed = json['isSubscribed'];
+    trialStartDate = json['trialStartDate'];
     phone = json['phone'];
     email = json['email'];
-    enrolledCourses = json['enrolledCourses'].cast<String>();
+    // Not part of the documented profile payload, so it may be absent.
+    enrolledCourses =
+        (json['enrolledCourses'] as List?)?.map((e) => e.toString()).toList();
     subscriptionStartDate = json['subscriptionStartDate'];
     subscriptionEndDate = json['subscriptionEndDate'];
     createdAt = json['createdAt'];
@@ -76,6 +94,12 @@ class Data {
     data['studentId'] = studentId;
     data['name'] = name;
     data['categoryType'] = categoryType;
+    data['category'] = {
+      'mainCategory': mainCategory,
+      'subCategory': subCategory,
+    };
+    data['isSubscribed'] = isSubscribed;
+    data['trialStartDate'] = trialStartDate;
     data['phone'] = phone;
     data['email'] = email;
     data['enrolledCourses'] = enrolledCourses;

@@ -136,6 +136,7 @@ class QuestionPattern {
 class CategoryId {
   String? id;
   String? type;
+  String? group;
   String? division;
   String? subject;
   String? chapter;
@@ -147,6 +148,7 @@ class CategoryId {
   CategoryId({
     this.id,
     this.type,
+    this.group,
     this.division,
     this.subject,
     this.chapter,
@@ -159,6 +161,7 @@ class CategoryId {
   factory CategoryId.fromJson(Map<String, dynamic> json) => CategoryId(
     id: json['_id'],
     type: json['type'],
+    group: json['group'],
     division: json['division'],
     subject: json['subject'],
     chapter: json['chapter'],
@@ -171,6 +174,7 @@ class CategoryId {
   Map<String, dynamic> toJson() => {
     '_id': id,
     'type': type,
+    'group': group,
     'division': division,
     'subject': subject,
     'chapter': chapter,

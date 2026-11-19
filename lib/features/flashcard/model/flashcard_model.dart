@@ -8,7 +8,14 @@ class FlashcardResponse {
   FlashcardResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
-    data = json['data'] != null ? FlashcardData.fromJson(json['data']) : null;
+    final raw = json['data'];
+    if (raw is Map<String, dynamic>) {
+      // Live shape: { data: { meta, data: [...] } }
+      data = FlashcardData.fromJson(raw);
+    } else if (raw is List) {
+      // Documented shape: { meta, data: [...] }
+      data = FlashcardData.fromJson({'meta': json['meta'], 'data': raw});
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -29,7 +36,9 @@ class FlashcardData {
   FlashcardData({this.meta, this.data});
 
   FlashcardData.fromJson(Map<String, dynamic> json) {
-    meta = json['meta'] != null ? MetaData.fromJson(json['meta']) : null;
+    meta = json['meta'] is Map<String, dynamic>
+        ? MetaData.fromJson(json['meta'])
+        : null;
     if (json['data'] != null) {
       data = <Flashcard>[];
       json['data'].forEach((v) {
@@ -99,11 +108,14 @@ class Flashcard {
     sId = json['_id'];
     title = json['title'];
     visibility = json['visibility'];
-    categoryId = json['categoryId'] != null
+    // `categoryId` / `studentId` are populated objects on list responses but
+    // plain id strings on some others (e.g. right after create).
+    categoryId = json['categoryId'] is Map<String, dynamic>
         ? Category.fromJson(json['categoryId'])
         : null;
-    studentId =
-        json['studentId'] != null ? Student.fromJson(json['studentId']) : null;
+    studentId = json['studentId'] is Map<String, dynamic>
+        ? Student.fromJson(json['studentId'])
+        : null;
     isApproved = json['isApproved'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -131,20 +143,22 @@ class Flashcard {
 
 class Category {
   String? sId;
-  String? type;
-  String? division;
+  String? group;
   String? subject;
-  String? chapter;
+  String? lesson;
+  String? name;
+  String? type;
   String? createdAt;
   String? updatedAt;
   int? iV;
 
   Category({
     this.sId,
-    this.type,
+    this.group,
     this.subject,
-    this.division,
-    this.chapter,
+    this.lesson,
+    this.name,
+    this.type,
     this.createdAt,
     this.updatedAt,
     this.iV,
@@ -152,10 +166,11 @@ class Category {
 
   Category.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    type = json['type'];
-    division = json['division'];
+    group = json['group'];
     subject = json['subject'];
-    chapter = json['chapter'];
+    lesson = json['lesson'];
+    name = json['name'];
+    type = json['type'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
@@ -164,10 +179,11 @@ class Category {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = sId;
-    data['type'] = type;
-    data['division'] = division;
+    data['group'] = group;
     data['subject'] = subject;
-    data['chapter'] = chapter;
+    data['lesson'] = lesson;
+    data['name'] = name;
+    data['type'] = type;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['__v'] = iV;

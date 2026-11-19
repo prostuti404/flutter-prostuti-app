@@ -1,54 +1,42 @@
+/// A category in the unified Group -> Subject -> Lesson schema.
+///
+/// `name` is the display string "subject - lesson". `type` is "Academic"
+/// (default) or "Admission".
 class Category {
   final String? sId;
-  final String? type;
+  final String? group;
   final String? subject;
-  final String? chapter;
   final String? lesson;
-
-  // Academic specific
-  final String? division;
-
-  // Job specific
-  final String? jobType;
-  final String? jobName;
-
-  // Admission specific
-  final String? universityType;
-  final String? universityName;
-  final String? unit;
-
+  final String? name;
+  final String? type;
   final String? createdAt;
   final String? updatedAt;
 
   Category({
     this.sId,
-    this.type,
+    this.group,
     this.subject,
-    this.chapter,
     this.lesson,
-    this.division,
-    this.jobType,
-    this.jobName,
-    this.universityType,
-    this.universityName,
-    this.unit,
+    this.name,
+    this.type,
     this.createdAt,
     this.updatedAt,
   });
 
+  /// Display label, falling back to "subject - lesson" when `name` is absent.
+  String get displayName {
+    if (name != null && name!.isNotEmpty) return name!;
+    return [subject, lesson].where((e) => e != null && e.isNotEmpty).join(' - ');
+  }
+
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
       sId: json['_id'],
-      type: json['type'],
+      group: json['group'],
       subject: json['subject'],
-      chapter: json['chapter'],
       lesson: json['lesson'],
-      division: json['division'],
-      jobType: json['jobType'],
-      jobName: json['jobName'],
-      universityType: json['universityType'],
-      universityName: json['universityName'],
-      unit: json['unit'],
+      name: json['name'],
+      type: json['type'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
     );
@@ -57,16 +45,11 @@ class Category {
   Map<String, dynamic> toJson() {
     return {
       '_id': sId,
-      'type': type,
+      'group': group,
       'subject': subject,
-      'chapter': chapter,
       'lesson': lesson,
-      'division': division,
-      'jobType': jobType,
-      'jobName': jobName,
-      'universityType': universityType,
-      'universityName': universityName,
-      'unit': unit,
+      'name': name,
+      'type': type,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };

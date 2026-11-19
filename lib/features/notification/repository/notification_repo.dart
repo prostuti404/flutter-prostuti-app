@@ -42,4 +42,24 @@ class NotificationRepo {
       return Left(errorResponse);
     }
   }
+
+  /// Marks a single notification as read (`PATCH /student-notification/:id`).
+  Future<Either<ErrorResponse, bool>> markAsRead(String notificationId) async {
+    try {
+      final response =
+          await _dioService.patchRequest("/student-notification/$notificationId");
+
+      if (response.statusCode == 200) {
+        return const Right(true);
+      } else {
+        final errorResponse = ErrorResponse.fromJson(response.data);
+        ErrorHandler().setErrorMessage(errorResponse.message);
+        return Left(errorResponse);
+      }
+    } catch (e) {
+      final errorResponse = ErrorResponse(message: e.toString(), success: false);
+      ErrorHandler().setErrorMessage(errorResponse.message);
+      return Left(errorResponse);
+    }
+  }
 }

@@ -62,7 +62,8 @@ import 'app_localizations_en.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +84,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -212,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @onlyMe.
   ///
   /// In en, this message translates to:
-  /// **'Only me'**
+  /// **'Only Me'**
   String get onlyMe;
 
   /// No description provided for @everyone.
@@ -467,6 +470,12 @@ abstract class AppLocalizations {
   /// **'Password must contain at least one uppercase letter, one special character, and be at least 8 characters long'**
   String get passwordValidationMessage;
 
+  /// No description provided for @passwordMinLengthMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters long'**
+  String get passwordMinLengthMessage;
+
   /// No description provided for @category.
   ///
   /// In en, this message translates to:
@@ -563,6 +572,144 @@ abstract class AppLocalizations {
   /// **'Mock Test'**
   String get mockTest;
 
+  /// No description provided for @segmentTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Segment Test'**
+  String get segmentTest;
+
+  /// No description provided for @segmentTestDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select each of the details below accurately for your goal-oriented test.'**
+  String get segmentTestDescription;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @quizer.
+  ///
+  /// In en, this message translates to:
+  /// **'Quizer'**
+  String get quizer;
+
+  /// No description provided for @selectTestType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Test Type'**
+  String get selectTestType;
+
+  /// No description provided for @testTypeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Test is everything about your preparation in one place - mock tests, segment tests, quizer. Choose, take the test, see the results, and learn from your mistakes. Make preparation easier and more effective!'**
+  String get testTypeDescription;
+
+  /// No description provided for @questionStandard.
+  ///
+  /// In en, this message translates to:
+  /// **'Question Standard'**
+  String get questionStandard;
+
+  /// No description provided for @addAnotherSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Another Subject'**
+  String get addAnotherSubject;
+
+  /// No description provided for @questionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Questions'**
+  String get questionCount;
+
+  /// No description provided for @selectQuestionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Select number of questions'**
+  String get selectQuestionCount;
+
+  /// No description provided for @negativeMarking.
+  ///
+  /// In en, this message translates to:
+  /// **'Negative Marking'**
+  String get negativeMarking;
+
+  /// No description provided for @testDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get testDuration;
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get hours;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get minutes;
+
+  /// No description provided for @seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get seconds;
+
+  /// No description provided for @startTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Test'**
+  String get startTest;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error!'**
+  String get errorTitle;
+
+  /// No description provided for @selectAtLeastOneSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one subject.'**
+  String get selectAtLeastOneSubject;
+
+  /// No description provided for @enterValidQuestionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the number of questions correctly.'**
+  String get enterValidQuestionCount;
+
+  /// No description provided for @enterValidTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the time correctly.'**
+  String get enterValidTime;
+
+  /// No description provided for @questionTypeFilterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Question Type*'**
+  String get questionTypeFilterLabel;
+
+  /// No description provided for @selectAtLeastOneQuestionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one question type.'**
+  String get selectAtLeastOneQuestionType;
+
   /// No description provided for @clearYourDoubts.
   ///
   /// In en, this message translates to:
@@ -572,7 +719,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingDesc.
   ///
   /// In en, this message translates to:
-  /// **'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'**
+  /// **'Practice, build your skills, and boost your confidence. Start your journey to success today!'**
   String get onboardingDesc;
 
   /// No description provided for @getStarted.
@@ -796,6 +943,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Premium'**
   String get premium;
+
+  /// No description provided for @premiumPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Plan'**
+  String get premiumPlanTitle;
+
+  /// No description provided for @standardPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard Plan'**
+  String get standardPlanTitle;
+
+  /// No description provided for @basicPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Plan'**
+  String get basicPlanTitle;
+
+  /// No description provided for @forOneYear.
+  ///
+  /// In en, this message translates to:
+  /// **'for 1 year'**
+  String get forOneYear;
+
+  /// No description provided for @forSixMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'for 6 months'**
+  String get forSixMonths;
+
+  /// No description provided for @forOneMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'for 1 month'**
+  String get forOneMonth;
+
+  /// No description provided for @alreadyActiveSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have an active subscription'**
+  String get alreadyActiveSubscription;
+
+  /// No description provided for @upgradeToPremiumTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Premium?'**
+  String get upgradeToPremiumTitle;
+
+  /// No description provided for @premiumIntroDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Prostuti Premium gives you unlimited access to all courses, mock tests, flashcards, and direct conversations with tutors, so you can prepare with everything you need in one place.'**
+  String get premiumIntroDescription;
+
+  /// No description provided for @premiumTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you need to prepare, in one subscription'**
+  String get premiumTagline;
+
+  /// No description provided for @whyUpgradeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why should you upgrade?'**
+  String get whyUpgradeTitle;
+
+  /// No description provided for @benefitCoursesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Access to all courses'**
+  String get benefitCoursesTitle;
+
+  /// No description provided for @benefitCoursesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock every current and upcoming course, along with all of its lessons and materials.'**
+  String get benefitCoursesDesc;
+
+  /// No description provided for @benefitMockTestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited mock tests'**
+  String get benefitMockTestsTitle;
+
+  /// No description provided for @benefitMockTestsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice with unlimited mock tests, quizzes, and segment tests to track your progress.'**
+  String get benefitMockTestsDesc;
+
+  /// No description provided for @benefitFlashcardsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Flashcards for quick revision'**
+  String get benefitFlashcardsTitle;
+
+  /// No description provided for @benefitFlashcardsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Revise faster with flashcards covering every subject and topic.'**
+  String get benefitFlashcardsDesc;
+
+  /// No description provided for @benefitTutorChatTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct chat with tutors'**
+  String get benefitTutorChatTitle;
+
+  /// No description provided for @benefitTutorChatDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Get your doubts cleared by chatting directly with tutors whenever you need help.'**
+  String get benefitTutorChatDesc;
 
   /// No description provided for @price.
   ///
@@ -1478,8 +1739,14 @@ abstract class AppLocalizations {
   /// No description provided for @myCalendar.
   ///
   /// In en, this message translates to:
-  /// **'My Calender'**
+  /// **'My Calendar'**
   String get myCalendar;
+
+  /// No description provided for @myFlashcards.
+  ///
+  /// In en, this message translates to:
+  /// **'My Flashcards'**
+  String get myFlashcards;
 
   /// No description provided for @routineLoadError.
   ///
@@ -1718,7 +1985,7 @@ abstract class AppLocalizations {
   /// No description provided for @favoriteItems.
   ///
   /// In en, this message translates to:
-  /// **'Favourites'**
+  /// **'Favorites'**
   String get favoriteItems;
 
   /// No description provided for @allActivities.
@@ -2212,9 +2479,196 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View Profile'**
   String get seeProfile;
+
+  /// No description provided for @freeTrialBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Free Trial'**
+  String get freeTrialBadge;
+
+  /// No description provided for @trialDaysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days left in your free trial'**
+  String trialDaysLeft(int days);
+
+  /// No description provided for @freeMockTestsLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{remaining} of {limit} free mock tests left'**
+  String freeMockTestsLeft(int remaining, int limit);
+
+  /// No description provided for @trialEndedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your free trial has ended'**
+  String get trialEndedTitle;
+
+  /// No description provided for @trialEndedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe to keep taking mock tests, watching recorded classes and preparing without limits.'**
+  String get trialEndedMessage;
+
+  /// No description provided for @trialLimitReachedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Free mock test limit reached'**
+  String get trialLimitReachedTitle;
+
+  /// No description provided for @trialLimitReachedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You have used all {limit} free mock tests from your trial. Subscribe for unlimited access.'**
+  String trialLimitReachedMessage(int limit);
+
+  /// No description provided for @featureNotInTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature is not part of the free trial.'**
+  String get featureNotInTrial;
+
+  /// No description provided for @subscribeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe Now'**
+  String get subscribeNow;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Now'**
+  String get notNow;
+
+  /// No description provided for @forMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'for {months} months'**
+  String forMonths(int months);
+
+  /// No description provided for @noSubscriptionPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No subscription plans are available right now'**
+  String get noSubscriptionPlans;
+
+  /// No description provided for @faqAskQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a Question'**
+  String get faqAskQuestion;
+
+  /// No description provided for @faqQuestion1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I buy a test course?'**
+  String get faqQuestion1;
+
+  /// No description provided for @faqAnswer1.
+  ///
+  /// In en, this message translates to:
+  /// **'To buy a subscription plan in the Prostuti app, log in to your account, go to the \"Subscription\" menu, choose the plan you prefer (1 month, 3 months, 6 months, or 12 months), and pay using our secure payment gateway. Once subscribed, you will have access to all test courses, study materials, and other premium features.'**
+  String get faqAnswer1;
+
+  /// No description provided for @faqQuestion2.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I create a flashcard?'**
+  String get faqQuestion2;
+
+  /// No description provided for @faqAnswer2.
+  ///
+  /// In en, this message translates to:
+  /// **'To create a flashcard in the Prostuti app, log in to your account, go to the \"Flashcard\" section, tap the \"Create New Flashcard\" button, enter your question and answer, and tap \"Save\". You can later edit, organize, and study the flashcards you have created.'**
+  String get faqAnswer2;
+
+  /// No description provided for @faqQuestion3.
+  ///
+  /// In en, this message translates to:
+  /// **'Which features can I use after my subscription ends?'**
+  String get faqQuestion3;
+
+  /// No description provided for @faqAnswer3.
+  ///
+  /// In en, this message translates to:
+  /// **'Even after your subscription ends, you can still use the following features: the test system, unlimited doubt solving, unlimited flashcards, and some pre-recorded courses. However, to access premium content and new courses you will need to subscribe again.'**
+  String get faqAnswer3;
+
+  /// No description provided for @faqQuestion4.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the refund policy?'**
+  String get faqQuestion4;
+
+  /// No description provided for @faqAnswer4.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a subscription is purchased, there is no option to cancel or get a refund except where required by law. Before subscribing, please review all the necessary information about our test courses and services. If you have any questions, contact our support team before subscribing.'**
+  String get faqAnswer4;
+
+  /// No description provided for @faqQuestion5.
+  ///
+  /// In en, this message translates to:
+  /// **'Does the Prostuti app store my personal information?'**
+  String get faqQuestion5;
+
+  /// No description provided for @faqAnswer5.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, we store your personal information and keep it secure. We collect your name, email, phone number, payment details, study interests, profile information, and academic history. We do not share your information with any other third parties, except service providers such as payment processors and cloud service providers who help us operate our platform.'**
+  String get faqAnswer5;
+
+  /// No description provided for @group.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get group;
+
+  /// No description provided for @lesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson'**
+  String get lesson;
+
+  /// No description provided for @noGroupsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No groups available'**
+  String get noGroupsAvailable;
+
+  /// No description provided for @noLessonsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No lessons available for this selection'**
+  String get noLessonsAvailable;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes your account and all your data. This cannot be undone.'**
+  String get deleteAccountMessage;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get accountDeleted;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2223,25 +2677,25 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['bn', 'en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['bn', 'en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'bn': return AppLocalizationsBn();
-    case 'en': return AppLocalizationsEn();
+    case 'bn':
+      return AppLocalizationsBn();
+    case 'en':
+      return AppLocalizationsEn();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

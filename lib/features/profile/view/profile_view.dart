@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
@@ -22,6 +23,7 @@ import '../../auth/category/view/category_view.dart';
 import '../../course/my_course/view/my_course_view.dart';
 import '../../payment/view/subscription_view.dart';
 import '../../payment/viewmodel/check_subscription.dart';
+import '../repository/profile_repo.dart';
 import '../viewmodel/profile_viewmodel.dart';
 import '../widgets/ProfileSkeleton.dart';
 import '../widgets/custom_list_tile.dart';
@@ -352,7 +354,18 @@ class UserProfileView extends ConsumerWidget with CommonWidgets {
                   await authNotifier.clearTokens();
                   Nav().pushAndRemoveUntil(const LoginView());
                 },
-              )
+              ),
+              const Gap(12),
+              TextButton(
+                onPressed: () => _confirmDeleteAccount(context, ref),
+                child: Text(
+                  context.l10n!.deleteAccount,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall!
+                      .copyWith(color: Colors.red),
+                ),
+              ),
             ],
           );
         },
@@ -365,6 +378,47 @@ class UserProfileView extends ConsumerWidget with CommonWidgets {
           return const ProfileSkeleton();
         },
       ),
+    );
+  }
+
+  Future<void> _confirmDeleteAccount(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(dialogContext.l10n!.deleteAccountTitle),
+        content: Text(dialogContext.l10n!.deleteAccountMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(dialogContext.l10n!.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              dialogContext.l10n!.delete,
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final result = await ref.read(profileRepoProvider).deleteAccount();
+    if (!context.mounted) return;
+
+    await result.fold(
+      (error) async {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.message)),
+        );
+      },
+      (_) async {
+        // Wipes tokens and local prefs, then returns to the login screen.
+        await ref.read(authNotifierProvider.notifier).clearTokens();
+        Fluttertoast.showToast(msg: context.l10n!.accountDeleted);
+        Nav().pushAndRemoveUntil(const LoginView());
+      },
     );
   }
 

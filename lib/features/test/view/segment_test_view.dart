@@ -7,7 +7,6 @@ import 'package:prostuti/features/test/view/segment_test_pattern_view.dart';
 
 import '../../../common/widgets/common_widgets/common_widgets.dart';
 import '../../../common/widgets/long_button.dart';
-import '../../chat/viewmodel/user_category.dart';
 import '../../flashcard/viewmodel/flashcard_filter_viewmodel.dart';
 import '../viewmodel/question_pattern_viewmodel.dart';
 
@@ -21,21 +20,7 @@ class SegmentTestLandingView extends ConsumerStatefulWidget {
 
 class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
     with CommonWidgets {
-  String? _selectedType;
-
-  // Academic specific
-  String? _selectedDivision;
-
-  // Job specific
-  String? _selectedJobType;
-  String? _selectedJobName;
-
-  // Admission specific
-  String? _selectedUniversityType;
-  String? _selectedUniversityName;
-  String? _selectedUnit;
-
-  // Common
+  String? _selectedGroup;
   String? _selectedSubject;
 
   @override
@@ -61,8 +46,7 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
       final pattern = await ref
           .read(questionPatternViewmodelProvider.notifier)
           .loadFirstQuestionPattern(
-            categoryType: _selectedType,
-            categoryDivision: _selectedDivision,
+            categoryGroup: _selectedGroup,
             categorySubject: _selectedSubject,
           );
 
@@ -85,202 +69,13 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
     }
   }
 
-  Widget _buildSecondLevelDropdown() {
-    final categoriesAsync = ref.watch(categoriesProvider);
-
-    if (_selectedType == null) return const SizedBox.shrink();
-
-    switch (_selectedType) {
-      case 'Academic':
-        return _buildFormField(
-          label: context.l10n?.division ?? 'ক্লাস*',
-          child: categoriesAsync.when(
-            data: (categories) {
-              final divisions = ref
-                  .read(categoriesProvider.notifier)
-                  .getUniqueDivisions(categories);
-              return _buildDropdown(
-                hint: context.l10n?.selectDivision ?? 'নবম শ্রেণী',
-                value: _selectedDivision,
-                items: divisions,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedDivision = newValue;
-                    _selectedSubject = null;
-                  });
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const Text('Failed to load divisions'),
-          ),
-        );
-
-      case 'Job':
-        return _buildFormField(
-          label: 'Job Type*',
-          child: categoriesAsync.when(
-            data: (categories) {
-              final jobTypes = ref
-                  .read(categoriesProvider.notifier)
-                  .getUniqueJobTypes(categories);
-              return _buildDropdown(
-                hint: 'Select Job Type',
-                value: _selectedJobType,
-                items: jobTypes,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedJobType = newValue;
-                    _selectedJobName = null;
-                    _selectedSubject = null;
-                  });
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const Text('Failed to load job types'),
-          ),
-        );
-
-      case 'Admission':
-        return _buildFormField(
-          label: 'University Type*',
-          child: categoriesAsync.when(
-            data: (categories) {
-              final universityTypes = ref
-                  .read(categoriesProvider.notifier)
-                  .getUniqueUniversityTypes(categories);
-              return _buildDropdown(
-                hint: 'Select University Type',
-                value: _selectedUniversityType,
-                items: universityTypes,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedUniversityType = newValue;
-                    _selectedUniversityName = null;
-                    _selectedUnit = null;
-                    _selectedSubject = null;
-                  });
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const Text('Failed to load university types'),
-          ),
-        );
-
-      default:
-        return const SizedBox.shrink();
-    }
-  }
-
-  Widget _buildThirdLevelDropdown() {
-    final categoriesAsync = ref.watch(categoriesProvider);
-
-    if (_selectedType == null) return const SizedBox.shrink();
-
-    switch (_selectedType) {
-      case 'Job':
-        if (_selectedJobType == null) return const SizedBox.shrink();
-        return _buildFormField(
-          label: 'Job Name*',
-          child: categoriesAsync.when(
-            data: (categories) {
-              final jobNames = ref
-                  .read(categoriesProvider.notifier)
-                  .getUniqueJobNames(categories, _selectedJobType);
-              return _buildDropdown(
-                hint: 'Select Job Name',
-                value: _selectedJobName,
-                items: jobNames,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedJobName = newValue;
-                    _selectedSubject = null;
-                  });
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const Text('Failed to load job names'),
-          ),
-        );
-
-      case 'Admission':
-        if (_selectedUniversityType != 'University')
-          return const SizedBox.shrink();
-        return _buildFormField(
-          label: 'University Name*',
-          child: categoriesAsync.when(
-            data: (categories) {
-              final universityNames = ref
-                  .read(categoriesProvider.notifier)
-                  .getUniqueUniversityNames(
-                      categories, _selectedUniversityType);
-              return _buildDropdown(
-                hint: 'Select University Name',
-                value: _selectedUniversityName,
-                items: universityNames,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedUniversityName = newValue;
-                    _selectedUnit = null;
-                    _selectedSubject = null;
-                  });
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const Text('Failed to load university names'),
-          ),
-        );
-
-      default:
-        return const SizedBox.shrink();
-    }
-  }
-
-  Widget _buildFourthLevelDropdown() {
-    final categoriesAsync = ref.watch(categoriesProvider);
-
-    if (_selectedType != 'Admission' ||
-        _selectedUniversityType != 'University' ||
-        _selectedUniversityName == null) {
-      return const SizedBox.shrink();
-    }
-
-    return _buildFormField(
-      label: 'Unit*',
-      child: categoriesAsync.when(
-        data: (categories) {
-          final units = ref.read(categoriesProvider.notifier).getUniqueUnits(
-              categories, _selectedUniversityType, _selectedUniversityName);
-          return _buildDropdown(
-            hint: 'Select Unit',
-            value: _selectedUnit,
-            items: units,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedUnit = newValue;
-                _selectedSubject = null;
-              });
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, __) => const Text('Failed to load units'),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final categoriesAsync = ref.watch(categoriesProvider);
-    final userCategoryAsync = ref.watch(userCategoryProvider);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: commonAppbar("সেগমেন্ট টেস্ট"),
+      appBar: commonAppbar(context.l10n!.segmentTest),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: Container(
@@ -292,70 +87,46 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
           child: Column(
             children: [
               Text(
-                'আপনার লক্ষ্যভিত্তিক পরীক্ষার জন্য নিচের প্রতিটি তথ্য নির্ভুলভাবে নির্বাচন করুন।',
+                context.l10n!.segmentTestDescription,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const Gap(16),
-              // Course field
-              userCategoryAsync.when(
-                data: (data) {
-                  _selectedType = data;
-                  return _buildFormField(
-                    label: context.l10n?.course ?? 'কোর্স*',
-                    child: categoriesAsync.when(
-                      data: (categories) {
-                        final types = ref
-                            .read(categoriesProvider.notifier)
-                            .getUniqueTypes(categories);
-                        return _buildDropdown(
-                          hint: context.l10n!.selectCourse,
-                          value: _selectedType,
-                          items: types,
-                          onChanged: null,
-                        );
+              // Group field (Science / Commerce / Arts)
+              _buildFormField(
+                label: context.l10n!.group,
+                child: categoriesAsync.when(
+                  data: (categories) {
+                    final groups = ref
+                        .read(categoriesProvider.notifier)
+                        .getUniqueGroups(categories);
+                    return _buildDropdown(
+                      hint: context.l10n!.group,
+                      value: _selectedGroup,
+                      items: groups,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedGroup = newValue;
+                          _selectedSubject = null;
+                        });
                       },
-                      loading: () => const Center(child: Text("Loading...")),
-                      error: (_, __) => const Text('Failed to load categories'),
-                    ),
-                  );
-                },
-                loading: () => const Center(child: Text("Loading...")),
-                error: (_, __) => const Text('Failed to load categories'),
+                    );
+                  },
+                  loading: () => const Center(child: Text("Loading...")),
+                  error: (_, __) => const Text('Failed to load categories'),
+                ),
               ),
-
-              // Second level dropdown (Division/JobType/UniversityType)
-              _buildSecondLevelDropdown(),
-
-              // Third level dropdown (JobName/UniversityName for University type)
-              _buildThirdLevelDropdown(),
-
-              // Fourth level dropdown (Unit for University)
-              _buildFourthLevelDropdown(),
 
               // Subject field
               _buildFormField(
-                label: context.l10n?.subject ?? 'সাবজেক্ট*',
+                label: context.l10n!.subject,
                 child: categoriesAsync.when(
                   data: (categories) {
-                    final subjects = _selectedType != null
-                        ? ref
-                            .read(categoriesProvider.notifier)
-                            .getUniqueSubjects(
-                              categories,
-                              FilterState(
-                                selectedType: _selectedType,
-                                selectedDivision: _selectedDivision,
-                                selectedJobType: _selectedJobType,
-                                selectedJobName: _selectedJobName,
-                                selectedUniversityType: _selectedUniversityType,
-                                selectedUniversityName: _selectedUniversityName,
-                                selectedUnit: _selectedUnit,
-                              ),
-                            )
-                        : <String>[];
+                    final subjects = ref
+                        .read(categoriesProvider.notifier)
+                        .getUniqueSubjects(categories, _selectedGroup);
                     return _buildDropdown(
-                      hint: context.l10n?.selectSubject ?? 'বিজ্ঞান',
+                      hint: context.l10n!.selectSubject,
                       value: _selectedSubject,
                       items: subjects,
                       onChanged: (newValue) {
@@ -373,7 +144,7 @@ class _SegmentTestLandingViewState extends ConsumerState<SegmentTestLandingView>
 
               LongButton(
                 onPressed: _startSegmentTest,
-                text: "পরবর্তী",
+                text: context.l10n!.next,
               ),
             ],
           ),

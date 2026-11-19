@@ -25,29 +25,27 @@ class FlashcardRepo {
     int page = 1,
     int limit = 10,
     required String visibility,
-    String? categoryType,
-    String? categoryDivision,
+    String? categoryGroup,
     String? categorySubject,
+    String? categoryLesson,
+    String? searchTerm,
   }) async {
-    final queryParams = {
+    final queryParams = <String, dynamic>{
       "page": page,
       "limit": limit,
       "visibility": visibility,
       "isApproved": true,
     };
 
-    // Add filter parameters if they're provided
-    if (categoryType != null && categoryType.isNotEmpty) {
-      queryParams["categoryType"] = categoryType;
+    // Cascading Group -> Subject -> Lesson filters (API doc section 2.3).
+    void addIfPresent(String key, String? value) {
+      if (value != null && value.isNotEmpty) queryParams[key] = value;
     }
 
-    if (categoryDivision != null && categoryDivision.isNotEmpty) {
-      queryParams["categoryDivision"] = categoryDivision;
-    }
-
-    if (categorySubject != null && categorySubject.isNotEmpty) {
-      queryParams["categorySubject"] = categorySubject;
-    }
+    addIfPresent("categoryGroup", categoryGroup);
+    addIfPresent("categorySubject", categorySubject);
+    addIfPresent("categoryLesson", categoryLesson);
+    addIfPresent("searchTerm", searchTerm);
 
     final response = await _dioService.getRequest(
       "/flashcard/all-flashcard",
@@ -64,18 +62,23 @@ class FlashcardRepo {
   }
 
   Future<Either<ErrorResponse, FlashcardResponse>> searchFlashcards(
-      String query, String visibility, String categoryType) async {
-    final response = await _dioService.getRequest(
-      "/flashcard/all-flashcard",
-      queryParameters: {
-        "searchTerm": query,
-        "visibility": visibility,
-        "categoryType": categoryType,
-      },
+      String query, String visibility) async {
+    return getAllFlashcards(
+      visibility: visibility,
+      searchTerm: query,
+    );
+  }
+
+  /// Records a swipe on a deck item: `right` = known, `left` = needs review.
+  Future<Either<ErrorResponse, bool>> swipeFlashcardItem(
+      String itemId, String swipeDirection) async {
+    final response = await _dioService.patchRequest(
+      "/flashcard/swipe-flashcard-item/$itemId",
+      data: {"swipeDirection": swipeDirection},
     );
 
     if (response.statusCode == 200) {
-      return Right(FlashcardResponse.fromJson(response.data));
+      return const Right(true);
     } else {
       final errorResponse = ErrorResponse.fromJson(response.data);
       ErrorHandler().setErrorMessage(errorResponse.message);
@@ -151,7 +154,10 @@ class FlashcardRepo {
 
   Future<Either<ErrorResponse, CategoryResponse>> getCategories() async {
     try {
-      final response = await _dioService.getRequest("/category?limit=0");
+      final response = await _dioService.getRequest(
+        "/category",
+        queryParameters: {"onlyCreated": true, "limit": 0},
+      );
 
       if (response.statusCode == 200) {
         return Right(CategoryResponse.fromJson(response.data));

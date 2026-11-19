@@ -3,28 +3,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:prostuti/core/services/localization_service.dart';
 
-import '../model/category_model.dart';
 import '../viewmodel/flashcard_filter_viewmodel.dart';
 import '../viewmodel/flashcard_viewmodel.dart';
 
+/// Group -> Subject -> Lesson cascading filter for the explore flashcards list.
 class FlashcardFilterSheet extends ConsumerStatefulWidget {
-  const FlashcardFilterSheet({super.key});  
+  const FlashcardFilterSheet({super.key});
 
   @override
   FlashcardFilterSheetState createState() => FlashcardFilterSheetState();
 }
 
 class FlashcardFilterSheetState extends ConsumerState<FlashcardFilterSheet> {
-  bool _isTypeExpanded = true;
-  bool _isSecondLevelExpanded = false;
-  bool _isThirdLevelExpanded = false;
-  bool _isFourthLevelExpanded = false;
+  bool _isGroupExpanded = true;
   bool _isSubjectExpanded = false;
+  bool _isLessonExpanded = false;
 
   @override
   Widget build(BuildContext context) {
     final categoriesAsync = ref.watch(categoriesProvider);
     final filterState = ref.watch(flashcardFilterProvider);
+    final notifier = ref.read(categoriesProvider.notifier);
+    final filterNotifier = ref.read(flashcardFilterProvider.notifier);
 
     return Container(
       constraints: BoxConstraints(
@@ -60,208 +60,86 @@ class FlashcardFilterSheetState extends ConsumerState<FlashcardFilterSheet> {
           const Gap(16),
           Flexible(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Type Filter Section
-                  _buildFilterSection(
-                    title: context.l10n!.type,
-                    isExpanded: _isTypeExpanded,
-                    onToggle: () =>
-                        setState(() => _isTypeExpanded = !_isTypeExpanded),
-                    content: categoriesAsync.when(
-                      data: (categories) {
-                        final types = ref
-                            .read(categoriesProvider.notifier)
-                            .getUniqueTypes(categories);
+              child: categoriesAsync.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) =>
+                    Center(child: Text('${context.l10n!.error}: $error')),
+                data: (categories) {
+                  final groups = notifier.getUniqueGroups(categories);
+                  final subjects = notifier.getUniqueSubjects(
+                      categories, filterState.selectedGroup);
+                  final lessons = notifier.getUniqueLessons(
+                      categories,
+                      filterState.selectedGroup,
+                      filterState.selectedSubject);
 
-                        return types.isEmpty
+                  return Column(
+                    children: [
+                      _buildFilterSection(
+                        title: context.l10n!.group,
+                        isExpanded: _isGroupExpanded,
+                        onToggle: () => setState(
+                            () => _isGroupExpanded = !_isGroupExpanded),
+                        content: groups.isEmpty
                             ? Center(
-                                child: Text(context.l10n!.noTypesAvailable))
+                                child: Text(context.l10n!.noGroupsAvailable))
                             : _buildOptionsList(
-                                items: types,
-                                selectedValue: filterState.selectedType,
+                                items: groups,
+                                selectedValue: filterState.selectedGroup,
                                 onSelected: (value) {
-                                  ref
-                                      .read(flashcardFilterProvider.notifier)
-                                      .setType(value);
+                                  filterNotifier.setGroup(value);
                                   setState(() {
-                                    _isSecondLevelExpanded = true;
-                                    _isTypeExpanded = false;
-                                    _isThirdLevelExpanded = false;
-                                    _isFourthLevelExpanded = false;
-                                    _isSubjectExpanded = false;
+                                    _isGroupExpanded = false;
+                                    _isSubjectExpanded = true;
+                                    _isLessonExpanded = false;
                                   });
                                 },
-                              );
-                      },
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                      error: (error, _) =>
-                          Center(child: Text('${context.l10n!.error}: $error')),
-                    ),
-                  ),
-
-                  const Gap(16),
-
-                  // Second Level Filter Section (Division/JobType/UniversityType)
-                  if (filterState.selectedType != null)
-                    _buildFilterSection(
-                      title: _getSecondLevelTitle(filterState.selectedType!),
-                      isExpanded: _isSecondLevelExpanded,
-                      onToggle: () => setState(() =>
-                          _isSecondLevelExpanded = !_isSecondLevelExpanded),
-                      content: categoriesAsync.when(
-                        data: (categories) {
-                          final items = _getSecondLevelItems(
-                              categories, filterState.selectedType!);
-
-                          return items.isEmpty
+                              ),
+                      ),
+                      const Gap(16),
+                      if (filterState.selectedGroup != null) ...[
+                        _buildFilterSection(
+                          title: context.l10n!.subject,
+                          isExpanded: _isSubjectExpanded,
+                          onToggle: () => setState(
+                              () => _isSubjectExpanded = !_isSubjectExpanded),
+                          content: subjects.isEmpty
                               ? Center(
-                                  child: Text(_getNoItemsMessage(
-                                      filterState.selectedType!)))
-                              : _buildOptionsList(
-                                  items: items,
-                                  selectedValue:
-                                      _getSecondLevelValue(filterState),
-                                  onSelected: (value) {
-                                    _setSecondLevelValue(
-                                        value, filterState.selectedType!);
-                                    setState(() {
-                                      _isThirdLevelExpanded =
-                                          _shouldShowThirdLevel(
-                                              filterState.selectedType!, value);
-                                      _isSecondLevelExpanded = false;
-                                      _isFourthLevelExpanded = false;
-                                      _isSubjectExpanded = false;
-                                    });
-                                  },
-                                );
-                        },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (error, _) => Center(
-                            child: Text('${context.l10n!.error}: $error')),
-                      ),
-                    ),
-
-                  const Gap(16),
-
-                  // Third Level Filter Section (JobName/UniversityName)
-                  if (_shouldShowThirdLevelSection(filterState))
-                    _buildFilterSection(
-                      title: _getThirdLevelTitle(filterState.selectedType!),
-                      isExpanded: _isThirdLevelExpanded,
-                      onToggle: () => setState(
-                          () => _isThirdLevelExpanded = !_isThirdLevelExpanded),
-                      content: categoriesAsync.when(
-                        data: (categories) {
-                          final items =
-                              _getThirdLevelItems(categories, filterState);
-
-                          return items.isEmpty
-                              ? Center(child: Text('No items available'))
-                              : _buildOptionsList(
-                                  items: items,
-                                  selectedValue:
-                                      _getThirdLevelValue(filterState),
-                                  onSelected: (value) {
-                                    _setThirdLevelValue(
-                                        value, filterState.selectedType!);
-                                    setState(() {
-                                      _isFourthLevelExpanded =
-                                          _shouldShowFourthLevel(
-                                              filterState, value);
-                                      _isThirdLevelExpanded = false;
-                                      _isSubjectExpanded = false;
-                                    });
-                                  },
-                                );
-                        },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (error, _) => Center(
-                            child: Text('${context.l10n!.error}: $error')),
-                      ),
-                    ),
-
-                  const Gap(16),
-
-                  // Fourth Level Filter Section (Unit)
-                  if (_shouldShowFourthLevelSection(filterState))
-                    _buildFilterSection(
-                      title: 'Unit',
-                      isExpanded: _isFourthLevelExpanded,
-                      onToggle: () => setState(() =>
-                          _isFourthLevelExpanded = !_isFourthLevelExpanded),
-                      content: categoriesAsync.when(
-                        data: (categories) {
-                          final units = ref
-                              .read(categoriesProvider.notifier)
-                              .getUniqueUnits(
-                                categories,
-                                filterState.selectedUniversityType,
-                                filterState.selectedUniversityName,
-                              );
-
-                          return units.isEmpty
-                              ? Center(child: Text('No units available'))
-                              : _buildOptionsList(
-                                  items: units,
-                                  selectedValue: filterState.selectedUnit,
-                                  onSelected: (value) {
-                                    ref
-                                        .read(flashcardFilterProvider.notifier)
-                                        .setUnit(value);
-                                    setState(() {
-                                      _isSubjectExpanded = true;
-                                      _isFourthLevelExpanded = false;
-                                    });
-                                  },
-                                );
-                        },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (error, _) => Center(
-                            child: Text('${context.l10n!.error}: $error')),
-                      ),
-                    ),
-
-                  const Gap(16),
-
-                  // Subject Filter Section
-                  if (filterState.selectedType != null)
-                    _buildFilterSection(
-                      title: context.l10n!.subject,
-                      isExpanded: _isSubjectExpanded,
-                      onToggle: () => setState(
-                          () => _isSubjectExpanded = !_isSubjectExpanded),
-                      content: categoriesAsync.when(
-                        data: (categories) {
-                          final subjects = ref
-                              .read(categoriesProvider.notifier)
-                              .getUniqueSubjects(categories, filterState);
-
-                          return subjects.isEmpty
-                              ? Center(
-                                  child:
-                                      Text(context.l10n!.noSubjectsAvailable))
+                                  child: Text(
+                                      context.l10n!.noSubjectsAvailable))
                               : _buildOptionsList(
                                   items: subjects,
                                   selectedValue: filterState.selectedSubject,
                                   onSelected: (value) {
-                                    ref
-                                        .read(flashcardFilterProvider.notifier)
-                                        .setSubject(value);
+                                    filterNotifier.setSubject(value);
+                                    setState(() {
+                                      _isSubjectExpanded = false;
+                                      _isLessonExpanded = true;
+                                    });
                                   },
-                                );
-                        },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (error, _) => Center(
-                            child: Text('${context.l10n!.error}: $error')),
-                      ),
-                    ),
-                ],
+                                ),
+                        ),
+                        const Gap(16),
+                      ],
+                      if (filterState.selectedSubject != null)
+                        _buildFilterSection(
+                          title: context.l10n!.lesson,
+                          isExpanded: _isLessonExpanded,
+                          onToggle: () => setState(
+                              () => _isLessonExpanded = !_isLessonExpanded),
+                          content: lessons.isEmpty
+                              ? Center(
+                                  child:
+                                      Text(context.l10n!.noLessonsAvailable))
+                              : _buildOptionsList(
+                                  items: lessons,
+                                  selectedValue: filterState.selectedLesson,
+                                  onSelected: filterNotifier.setLesson,
+                                ),
+                        ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -324,156 +202,6 @@ class FlashcardFilterSheetState extends ConsumerState<FlashcardFilterSheet> {
         ],
       ),
     );
-  }
-
-  String _getSecondLevelTitle(String type) {
-    switch (type) {
-      case 'Academic':
-        return context.l10n!.division;
-      case 'Job':
-        return 'Job Type';
-      case 'Admission':
-        return 'Institute Type';
-      default:
-        return '';
-    }
-  }
-
-  String _getThirdLevelTitle(String type) {
-    switch (type) {
-      case 'Job':
-        return 'Job Name';
-      case 'Admission':
-        return 'Institute Name';
-      default:
-        return '';
-    }
-  }
-
-  String _getNoItemsMessage(String type) {
-    switch (type) {
-      case 'Academic':
-        return context.l10n!.noDivisionsAvailable;
-      case 'Job':
-        return 'No job types available';
-      case 'Admission':
-        return 'No university types available';
-      default:
-        return 'No items available';
-    }
-  }
-
-  List<String> _getSecondLevelItems(List<Category> categories, String type) {
-    final notifier = ref.read(categoriesProvider.notifier);
-    switch (type) {
-      case 'Academic':
-        return notifier.getUniqueDivisions(categories);
-      case 'Job':
-        return notifier.getUniqueJobTypes(categories);
-      case 'Admission':
-        return notifier.getUniqueUniversityTypes(categories);
-      default:
-        return [];
-    }
-  }
-
-  List<String> _getThirdLevelItems(
-      List<Category> categories, FilterState filterState) {
-    final notifier = ref.read(categoriesProvider.notifier);
-    switch (filterState.selectedType) {
-      case 'Job':
-        return notifier.getUniqueJobNames(
-            categories, filterState.selectedJobType);
-      case 'Admission':
-        return notifier.getUniqueUniversityNames(
-            categories, filterState.selectedUniversityType);
-      default:
-        return [];
-    }
-  }
-
-  String? _getSecondLevelValue(FilterState filterState) {
-    switch (filterState.selectedType) {
-      case 'Academic':
-        return filterState.selectedDivision;
-      case 'Job':
-        return filterState.selectedJobType;
-      case 'Admission':
-        return filterState.selectedUniversityType;
-      default:
-        return null;
-    }
-  }
-
-  String? _getThirdLevelValue(FilterState filterState) {
-    switch (filterState.selectedType) {
-      case 'Job':
-        return filterState.selectedJobName;
-      case 'Admission':
-        return filterState.selectedUniversityName;
-      default:
-        return null;
-    }
-  }
-
-  void _setSecondLevelValue(String value, String type) {
-    switch (type) {
-      case 'Academic':
-        ref.read(flashcardFilterProvider.notifier).setDivision(value);
-        break;
-      case 'Job':
-        ref.read(flashcardFilterProvider.notifier).setJobType(value);
-        break;
-      case 'Admission':
-        ref.read(flashcardFilterProvider.notifier).setUniversityType(value);
-        break;
-    }
-  }
-
-  void _setThirdLevelValue(String value, String type) {
-    switch (type) {
-      case 'Job':
-        ref.read(flashcardFilterProvider.notifier).setJobName(value);
-        break;
-      case 'Admission':
-        ref.read(flashcardFilterProvider.notifier).setUniversityName(value);
-        break;
-    }
-  }
-
-  bool _shouldShowThirdLevel(String type, String? secondLevelValue) {
-    switch (type) {
-      case 'Job':
-        return secondLevelValue != null;
-      case 'Admission':
-        return secondLevelValue == 'University';
-      default:
-        return false;
-    }
-  }
-
-  bool _shouldShowThirdLevelSection(FilterState filterState) {
-    switch (filterState.selectedType) {
-      case 'Job':
-        return filterState.selectedJobType != null;
-      case 'Admission':
-        return filterState.selectedUniversityType == 'University';
-      default:
-        return false;
-    }
-  }
-
-  bool _shouldShowFourthLevel(
-      FilterState filterState, String? thirdLevelValue) {
-    return filterState.selectedType == 'Admission' &&
-        filterState.selectedUniversityType == 'University' &&
-        thirdLevelValue != null;
-  }
-
-  bool _shouldShowFourthLevelSection(FilterState filterState) {
-    return filterState.selectedType == 'Admission' &&
-        filterState.selectedUniversityType == 'University' &&
-        filterState.selectedUniversityName != null;
   }
 
   Widget _buildFilterSection({

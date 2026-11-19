@@ -69,14 +69,8 @@ class SignupRepo {
             message: "Category type is required", success: false));
       }
 
-      // Validate that categoryType is one of the valid options
-      final validCategories = ['Academic', 'Admission', 'Job'];
-      if (!validCategories.contains(payload['categoryType'])) {
-        return ApiResponse.error(ErrorResponse(
-            message:
-                "Invalid category type. Must be one of: ${validCategories.join(', ')}",
-            success: false));
-      }
+      // No client-side enum check: the accepted values now come from
+      // `/auth/registration-categories`, and the backend validates them.
 
       // Send the request
       final response =

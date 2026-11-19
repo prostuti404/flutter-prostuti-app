@@ -106,7 +106,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
   }
 }
 
-class NotificationCard extends StatelessWidget {
+class NotificationCard extends ConsumerWidget {
   final Data notification;
 
   const NotificationCard({
@@ -133,14 +133,23 @@ class NotificationCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isUnread = notification.isRead == false;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Padding(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: isUnread && notification.sId != null
+            ? () => ref
+                .read(notificationViewModelProvider.notifier)
+                .markAsRead(notification.sId!)
+            : null,
+        child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,6 +171,11 @@ class NotificationCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (isUnread)
+                  const Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: CircleAvatar(radius: 4, backgroundColor: Colors.blue),
+                  ),
                 Text(
                   _getTimeAgo(notification.createdAt ?? ''),
                   style: const TextStyle(
@@ -180,6 +194,7 @@ class NotificationCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

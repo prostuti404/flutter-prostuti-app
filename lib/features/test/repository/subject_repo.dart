@@ -18,13 +18,13 @@ class SubjectRepo {
     const String endpoint = '/category/subject';
     final Map<String, String> params = {};
 
-    if (selectedStandard == "একাডেমিক") {
+    if (selectedStandard == "Academic") {
       params['type'] = 'Academic';
-    } else if (selectedStandard == "ইঞ্জিনিয়ারিং") {
+    } else if (selectedStandard == "Engineering") {
       params['universityType'] = 'Engineering';
-    } else if (selectedStandard == "ভার্সিটি") {
+    } else if (selectedStandard == "University") {
       params['universityType'] = 'University';
-    } else if (selectedStandard == "মেডিকেল") {
+    } else if (selectedStandard == "Medical") {
       params['universityType'] = 'Medical';
     }
 

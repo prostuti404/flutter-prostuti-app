@@ -6,37 +6,37 @@ part 'flashcard_settings_viewmodel.g.dart';
 // Keys for SharedPreferences
 const String kSelectedCategoryId = 'selected_category_id';
 const String kSelectedVisibility = 'selected_visibility';
-const String kSelectedCategoryType = 'selected_category_type';
-const String kSelectedCategoryDivision = 'selected_category_division';
+const String kSelectedCategoryGroup = 'selected_category_group';
+const String kSelectedCategoryLesson = 'selected_category_lesson';
 const String kSelectedCategorySubject = 'selected_category_subject';
 
 class FlashcardSettings {
   final String? categoryId;
   final String? visibility;
-  final String? categoryType;
-  final String? categoryDivision;
+  final String? categoryGroup;
+  final String? categoryLesson;
   final String? categorySubject;
 
   FlashcardSettings({
     this.categoryId,
     this.visibility = 'EVERYONE',
-    this.categoryType,
-    this.categoryDivision,
+    this.categoryGroup,
+    this.categoryLesson,
     this.categorySubject,
   });
 
   FlashcardSettings copyWith({
     String? categoryId,
     String? visibility,
-    String? categoryType,
-    String? categoryDivision,
+    String? categoryGroup,
+    String? categoryLesson,
     String? categorySubject,
   }) {
     return FlashcardSettings(
       categoryId: categoryId ?? this.categoryId,
       visibility: visibility ?? this.visibility,
-      categoryType: categoryType ?? this.categoryType,
-      categoryDivision: categoryDivision ?? this.categoryDivision,
+      categoryGroup: categoryGroup ?? this.categoryGroup,
+      categoryLesson: categoryLesson ?? this.categoryLesson,
       categorySubject: categorySubject ?? this.categorySubject,
     );
   }
@@ -53,12 +53,12 @@ class FlashcardSettings {
       await prefs.setString(kSelectedVisibility, visibility!);
     }
 
-    if (categoryType != null) {
-      await prefs.setString(kSelectedCategoryType, categoryType!);
+    if (categoryGroup != null) {
+      await prefs.setString(kSelectedCategoryGroup, categoryGroup!);
     }
 
-    if (categoryDivision != null) {
-      await prefs.setString(kSelectedCategoryDivision, categoryDivision!);
+    if (categoryLesson != null) {
+      await prefs.setString(kSelectedCategoryLesson, categoryLesson!);
     }
 
     if (categorySubject != null) {
@@ -73,8 +73,8 @@ class FlashcardSettings {
     return FlashcardSettings(
       categoryId: prefs.getString(kSelectedCategoryId),
       visibility: prefs.getString(kSelectedVisibility) ?? 'EVERYONE',
-      categoryType: prefs.getString(kSelectedCategoryType),
-      categoryDivision: prefs.getString(kSelectedCategoryDivision),
+      categoryGroup: prefs.getString(kSelectedCategoryGroup),
+      categoryLesson: prefs.getString(kSelectedCategoryLesson),
       categorySubject: prefs.getString(kSelectedCategorySubject),
     );
   }
@@ -103,15 +103,15 @@ class FlashcardSettingsNotifier extends _$FlashcardSettingsNotifier {
 
   Future<void> setCategoryDetails({
     required String? categoryId,
-    required String? categoryType,
-    required String? categoryDivision,
+    required String? categoryGroup,
+    required String? categoryLesson,
     required String? categorySubject,
   }) async {
     final currentSettings = await future;
     final newSettings = currentSettings.copyWith(
       categoryId: categoryId,
-      categoryType: categoryType,
-      categoryDivision: categoryDivision,
+      categoryGroup: categoryGroup,
+      categoryLesson: categoryLesson,
       categorySubject: categorySubject,
     );
     await newSettings.saveToPrefs();

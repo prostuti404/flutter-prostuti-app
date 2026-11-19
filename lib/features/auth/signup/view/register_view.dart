@@ -49,7 +49,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return context.l10n!.emailRequired;
+      return null;
     }
     // Basic email regex pattern
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
@@ -63,10 +63,8 @@ class RegisterViewState extends ConsumerState<RegisterView> {
     if (value == null || value.isEmpty) {
       return context.l10n!.passwordRequired;
     }
-    // Password must contain at least one uppercase, one special character, and be at least 8 characters long
-    final passwordRegex = RegExp(r'^(?=.*?[A-Z])(?=.*?[!@#\$&*~]).{8,}$');
-    if (!passwordRegex.hasMatch(value)) {
-      return context.l10n!.passwordValidationMessage;
+    if (value.length < 6) {
+      return context.l10n!.passwordMinLengthMessage;
     }
     return null;
   }

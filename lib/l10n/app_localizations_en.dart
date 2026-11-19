@@ -64,7 +64,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get visibleBy => 'Visible By';
 
   @override
-  String get onlyMe => 'Only me';
+  String get onlyMe => 'Only Me';
 
   @override
   String get everyone => 'Everyone';
@@ -190,7 +190,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordRequired => 'Password is required';
 
   @override
-  String get passwordValidationMessage => 'Password must contain at least one uppercase letter, one special character, and be at least 8 characters long';
+  String get passwordValidationMessage =>
+      'Password must contain at least one uppercase letter, one special character, and be at least 8 characters long';
+
+  @override
+  String get passwordMinLengthMessage =>
+      'Password must be at least 6 characters long';
 
   @override
   String get category => 'Category';
@@ -241,10 +246,84 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mockTest => 'Mock Test';
 
   @override
+  String get segmentTest => 'Segment Test';
+
+  @override
+  String get segmentTestDescription =>
+      'Select each of the details below accurately for your goal-oriented test.';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get quizer => 'Quizer';
+
+  @override
+  String get selectTestType => 'Select Test Type';
+
+  @override
+  String get testTypeDescription =>
+      'Test is everything about your preparation in one place - mock tests, segment tests, quizer. Choose, take the test, see the results, and learn from your mistakes. Make preparation easier and more effective!';
+
+  @override
+  String get questionStandard => 'Question Standard';
+
+  @override
+  String get addAnotherSubject => 'Add Another Subject';
+
+  @override
+  String get questionCount => 'Number of Questions';
+
+  @override
+  String get selectQuestionCount => 'Select number of questions';
+
+  @override
+  String get negativeMarking => 'Negative Marking';
+
+  @override
+  String get testDuration => 'Time';
+
+  @override
+  String get hours => 'Hours';
+
+  @override
+  String get minutes => 'Minutes';
+
+  @override
+  String get seconds => 'Seconds';
+
+  @override
+  String get startTest => 'Start Test';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get errorTitle => 'Error!';
+
+  @override
+  String get selectAtLeastOneSubject => 'Please select at least one subject.';
+
+  @override
+  String get enterValidQuestionCount =>
+      'Please enter the number of questions correctly.';
+
+  @override
+  String get enterValidTime => 'Please enter the time correctly.';
+
+  @override
+  String get questionTypeFilterLabel => 'Select Question Type*';
+
+  @override
+  String get selectAtLeastOneQuestionType =>
+      'Please select at least one question type.';
+
+  @override
   String get clearYourDoubts => 'Clear Your Doubts';
 
   @override
-  String get onboardingDesc => 'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+  String get onboardingDesc =>
+      'Practice, build your skills, and boost your confidence. Start your journey to success today!';
 
   @override
   String get getStarted => 'Get Started';
@@ -356,6 +435,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get premium => 'Premium';
+
+  @override
+  String get premiumPlanTitle => 'Premium Plan';
+
+  @override
+  String get standardPlanTitle => 'Standard Plan';
+
+  @override
+  String get basicPlanTitle => 'Basic Plan';
+
+  @override
+  String get forOneYear => 'for 1 year';
+
+  @override
+  String get forSixMonths => 'for 6 months';
+
+  @override
+  String get forOneMonth => 'for 1 month';
+
+  @override
+  String get alreadyActiveSubscription =>
+      'You already have an active subscription';
+
+  @override
+  String get upgradeToPremiumTitle => 'Upgrade to Premium?';
+
+  @override
+  String get premiumIntroDescription =>
+      'Prostuti Premium gives you unlimited access to all courses, mock tests, flashcards, and direct conversations with tutors, so you can prepare with everything you need in one place.';
+
+  @override
+  String get premiumTagline =>
+      'Everything you need to prepare, in one subscription';
+
+  @override
+  String get whyUpgradeTitle => 'Why should you upgrade?';
+
+  @override
+  String get benefitCoursesTitle => 'Access to all courses';
+
+  @override
+  String get benefitCoursesDesc =>
+      'Unlock every current and upcoming course, along with all of its lessons and materials.';
+
+  @override
+  String get benefitMockTestsTitle => 'Unlimited mock tests';
+
+  @override
+  String get benefitMockTestsDesc =>
+      'Practice with unlimited mock tests, quizzes, and segment tests to track your progress.';
+
+  @override
+  String get benefitFlashcardsTitle => 'Flashcards for quick revision';
+
+  @override
+  String get benefitFlashcardsDesc =>
+      'Revise faster with flashcards covering every subject and topic.';
+
+  @override
+  String get benefitTutorChatTitle => 'Direct chat with tutors';
+
+  @override
+  String get benefitTutorChatDesc =>
+      'Get your doubts cleared by chatting directly with tutors whenever you need help.';
 
   @override
   String get price => 'Price';
@@ -556,7 +699,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get visibilityDescription => 'Choose who can see your flashcards';
 
   @override
-  String get everyoneDescription => 'Your flashcard will be visible to all users';
+  String get everyoneDescription =>
+      'Your flashcard will be visible to all users';
 
   @override
   String get onlyMeDescription => 'Your flashcard will be visible only to you';
@@ -658,7 +802,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noMessageRequests => 'No message requests';
 
   @override
-  String get messageRequestDesc => 'When someone sends you a message for the first time, it will appear here for your approval.';
+  String get messageRequestDesc =>
+      'When someone sends you a message for the first time, it will appear here for your approval.';
 
   @override
   String get askAQuestion => 'Ask a Question';
@@ -673,7 +818,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sendQuestion => 'Send Question';
 
   @override
-  String get messageSent => 'Your message has been sent! Teachers will respond soon.';
+  String get messageSent =>
+      'Your message has been sent! Teachers will respond soon.';
 
   @override
   String get howItWorks => 'How it works';
@@ -688,7 +834,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get waitingForTeacher => 'Waiting for Teacher';
 
   @override
-  String get noMessagesYetDesc => 'Your conversation will appear here once a teacher responds to your question.';
+  String get noMessagesYetDesc =>
+      'Your conversation will appear here once a teacher responds to your question.';
 
   @override
   String get todaysRoutine => 'Today\'s Activities';
@@ -697,7 +844,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seeMore => 'See More';
 
   @override
-  String get myCalendar => 'My Calender';
+  String get myCalendar => 'My Calendar';
+
+  @override
+  String get myFlashcards => 'My Flashcards';
 
   @override
   String get routineLoadError => 'Failed to Load Activities';
@@ -751,10 +901,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newQuestion => 'New Question';
 
   @override
-  String get questionSent => 'Your question has been sent. A teacher will respond soon.';
+  String get questionSent =>
+      'Your question has been sent. A teacher will respond soon.';
 
   @override
-  String get broadcastExpired => 'Your question request has expired. Please try again.';
+  String get broadcastExpired =>
+      'Your question request has expired. Please try again.';
 
   @override
   String get onlineStatus => 'Online';
@@ -817,7 +969,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get problemHint => 'Problem Number';
 
   @override
-  String get favoriteItems => 'Favourites';
+  String get favoriteItems => 'Favorites';
 
   @override
   String get allActivities => 'All Activities';
@@ -895,7 +1047,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voucherExpired => 'This voucher has expired';
 
   @override
-  String get voucherNotApplicable => 'This voucher is not applicable for this purchase';
+  String get voucherNotApplicable =>
+      'This voucher is not applicable for this purchase';
 
   @override
   String get availableVouchers => 'Available Vouchers';
@@ -934,13 +1087,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vouchers => 'Vouchers';
 
   @override
-  String get pleaseSelectYourCategory => 'Please select your preferred category';
+  String get pleaseSelectYourCategory =>
+      'Please select your preferred category';
 
   @override
   String get subcategory => 'Subcategory';
 
   @override
-  String get pleaseSelectYourSubcategory => 'Please select your preferred subcategory';
+  String get pleaseSelectYourSubcategory =>
+      'Please select your preferred subcategory';
 
   @override
   String get noSubcategoriesFound => 'No subcategories found';
@@ -1054,7 +1209,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactUsForAnyQuestions => 'Contact us for any questions';
 
   @override
-  String get supportDescription => 'Our support team is available to help you with any questions or issues you might have with the app.';
+  String get supportDescription =>
+      'Our support team is available to help you with any questions or issues you might have with the app.';
 
   @override
   String get helplineCall => 'Call Helpline';
@@ -1064,4 +1220,115 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seeProfile => 'View Profile';
+
+  @override
+  String get freeTrialBadge => 'Free Trial';
+
+  @override
+  String trialDaysLeft(int days) {
+    return '$days days left in your free trial';
+  }
+
+  @override
+  String freeMockTestsLeft(int remaining, int limit) {
+    return '$remaining of $limit free mock tests left';
+  }
+
+  @override
+  String get trialEndedTitle => 'Your free trial has ended';
+
+  @override
+  String get trialEndedMessage =>
+      'Subscribe to keep taking mock tests, watching recorded classes and preparing without limits.';
+
+  @override
+  String get trialLimitReachedTitle => 'Free mock test limit reached';
+
+  @override
+  String trialLimitReachedMessage(int limit) {
+    return 'You have used all $limit free mock tests from your trial. Subscribe for unlimited access.';
+  }
+
+  @override
+  String get featureNotInTrial => 'This feature is not part of the free trial.';
+
+  @override
+  String get subscribeNow => 'Subscribe Now';
+
+  @override
+  String get notNow => 'Not Now';
+
+  @override
+  String forMonths(int months) {
+    return 'for $months months';
+  }
+
+  @override
+  String get noSubscriptionPlans =>
+      'No subscription plans are available right now';
+
+  @override
+  String get faqAskQuestion => 'Ask a Question';
+
+  @override
+  String get faqQuestion1 => 'How do I buy a test course?';
+
+  @override
+  String get faqAnswer1 =>
+      'To buy a subscription plan in the Prostuti app, log in to your account, go to the \"Subscription\" menu, choose the plan you prefer (1 month, 3 months, 6 months, or 12 months), and pay using our secure payment gateway. Once subscribed, you will have access to all test courses, study materials, and other premium features.';
+
+  @override
+  String get faqQuestion2 => 'How do I create a flashcard?';
+
+  @override
+  String get faqAnswer2 =>
+      'To create a flashcard in the Prostuti app, log in to your account, go to the \"Flashcard\" section, tap the \"Create New Flashcard\" button, enter your question and answer, and tap \"Save\". You can later edit, organize, and study the flashcards you have created.';
+
+  @override
+  String get faqQuestion3 =>
+      'Which features can I use after my subscription ends?';
+
+  @override
+  String get faqAnswer3 =>
+      'Even after your subscription ends, you can still use the following features: the test system, unlimited doubt solving, unlimited flashcards, and some pre-recorded courses. However, to access premium content and new courses you will need to subscribe again.';
+
+  @override
+  String get faqQuestion4 => 'What is the refund policy?';
+
+  @override
+  String get faqAnswer4 =>
+      'Once a subscription is purchased, there is no option to cancel or get a refund except where required by law. Before subscribing, please review all the necessary information about our test courses and services. If you have any questions, contact our support team before subscribing.';
+
+  @override
+  String get faqQuestion5 =>
+      'Does the Prostuti app store my personal information?';
+
+  @override
+  String get faqAnswer5 =>
+      'Yes, we store your personal information and keep it secure. We collect your name, email, phone number, payment details, study interests, profile information, and academic history. We do not share your information with any other third parties, except service providers such as payment processors and cloud service providers who help us operate our platform.';
+
+  @override
+  String get group => 'Group';
+
+  @override
+  String get lesson => 'Lesson';
+
+  @override
+  String get noGroupsAvailable => 'No groups available';
+
+  @override
+  String get noLessonsAvailable => 'No lessons available for this selection';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountTitle => 'Delete your account?';
+
+  @override
+  String get deleteAccountMessage =>
+      'This permanently deletes your account and all your data. This cannot be undone.';
+
+  @override
+  String get accountDeleted => 'Account deleted successfully';
 }

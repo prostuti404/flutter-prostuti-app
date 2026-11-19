@@ -15,7 +15,10 @@ import 'package:prostuti/features/payment/viewmodel/voucher_viewmodel.dart';
 import 'package:prostuti/features/payment/widgets/subscription_card.dart';
 
 import '../../../core/services/debouncer.dart';
+import '../model/subscription_plan_model.dart';
 import '../viewmodel/selected_index.dart';
+import '../viewmodel/subscription_plans_viewmodel.dart';
+import '../widgets/subscription_plans_skeleton.dart';
 import '../widgets/terms_condition.dart';
 
 final _loadingProvider = StateProvider<bool>((ref) => false);
@@ -24,30 +27,36 @@ final _voucherAppliedProvider = StateProvider<bool>((ref) => false);
 class SubscriptionView extends ConsumerWidget with CommonWidgets {
   SubscriptionView({super.key});
 
+  /// Display name for a plan, keyed off its length so the labels stay
+  /// localised. Anything the backend adds beyond the three known lengths falls
+  /// back to its raw `plan` string.
+  String _planTitle(BuildContext context, SubscriptionPlan plan) =>
+      switch (plan.durationInMonths) {
+        12 => context.l10n!.premiumPlanTitle,
+        6 => context.l10n!.standardPlanTitle,
+        1 => context.l10n!.basicPlanTitle,
+        _ => plan.plan,
+      };
+
+  String _durationText(BuildContext context, SubscriptionPlan plan) =>
+      switch (plan.durationInMonths) {
+        12 => context.l10n!.forOneYear,
+        6 => context.l10n!.forSixMonths,
+        1 => context.l10n!.forOneMonth,
+        final months => context.l10n!.forMonths(months),
+      };
+
   @override
   Widget build(BuildContext context, ref) {
-    final List<Map<String, dynamic>> plans = [
-      {
-        'plan': 'Premium',
-        'price': '${500 * 12}',
-        'duration': '1 year',
-        'priceValue': 500 * 12
-      },
-      {
-        'plan': 'Standard',
-        'price': '${500 * 6}',
-        'duration': '6 months',
-        'priceValue': 500 * 6
-      },
-      {
-        'plan': 'Basic',
-        'price': '${500}',
-        'duration': '1 month',
-        'priceValue': 500
-      },
-    ];
-
-    final selectedIndex = ref.watch(selectedIndexNotifierProvider);
+    final alreadyActiveSubscriptionMsg =
+        context.l10n!.alreadyActiveSubscription;
+    final plansAsyncValue = ref.watch(subscriptionPlansNotifierProvider);
+    final plans = plansAsyncValue.valueOrNull ?? const <SubscriptionPlan>[];
+    // The default selection (index 0) can outrun the plan list while it is
+    // still loading, or if the backend serves fewer plans than before.
+    final selectedIndex = plans.isEmpty
+        ? 0
+        : ref.watch(selectedIndexNotifierProvider).clamp(0, plans.length - 1);
     final subscriptionAsyncValue = ref.watch(userSubscribedProvider);
     final _debouncer = Debouncer(milliseconds: 120);
     final isLoading = ref.watch(_loadingProvider);
@@ -57,8 +66,8 @@ class SubscriptionView extends ConsumerWidget with CommonWidgets {
 
     // Get current plan and its original price
 
-    final currentPlan = plans[selectedIndex];
-    final originalPrice = (currentPlan['priceValue'] as num).toDouble();
+    final currentPlan = plans.isEmpty ? null : plans[selectedIndex];
+    final originalPrice = (currentPlan?.price ?? 0).toDouble();
 
     // Calculate final price with voucher if applied
     final finalPrice = voucherState.hasValue && voucherState.value != null
@@ -80,29 +89,64 @@ class SubscriptionView extends ConsumerWidget with CommonWidgets {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: plans.length,
-                    itemBuilder: (context, index) {
-                      final plan = plans[index];
-                      return GestureDetector(
-                        onTap: () {
-                          ref
-                              .read(selectedIndexNotifierProvider.notifier)
-                              .updateIndex(index);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: SubscriptionCard(
-                            plan: plan['plan']!,
-                            price: "৳ ${plan['price']}",
-                            duration: plan['duration']!,
-                            isSelected: index == selectedIndex,
+                  plansAsyncValue.when(
+                    data: (plans) {
+                      if (plans.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 32),
+                          child: Center(
+                            child: Text(
+                              context.l10n!.noSubscriptionPlans,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ),
-                        ),
+                        );
+                      }
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: plans.length,
+                        itemBuilder: (context, index) {
+                          final plan = plans[index];
+                          return GestureDetector(
+                            onTap: () {
+                              ref
+                                  .read(selectedIndexNotifierProvider.notifier)
+                                  .updateIndex(index);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: SubscriptionCard(
+                                planTitle: _planTitle(context, plan),
+                                price: "৳ ${plan.priceLabel}",
+                                durationText: _durationText(context, plan),
+                                isSelected: index == selectedIndex,
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
+                    loading: () => const SubscriptionPlansSkeleton(),
+                    error: (error, _) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 32),
+                      child: Column(
+                        children: [
+                          Text(
+                            context.l10n!.errorOccurred,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const Gap(12),
+                          TextButton(
+                            onPressed: () => ref
+                                .invalidate(subscriptionPlansNotifierProvider),
+                            child: Text(context.l10n!.retry),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   const Gap(24),
                 ],
@@ -119,32 +163,21 @@ class SubscriptionView extends ConsumerWidget with CommonWidgets {
                 children: [
                   isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : // Updated payment button section for subscription_view.dart
-
-                      // Updated payment button section for subscription_view.dart
-
-// Replace the ElevatedButton in your subscription view with this:
-
-                      ElevatedButton(
-                          onPressed: isLoading
+                      : ElevatedButton(
+                          // Nothing to buy until the plans have loaded.
+                          onPressed: isLoading || currentPlan == null
                               ? null
                               : () {
                                   _debouncer.run(
                                     action: () async {
-                                      // Debug print for payload
-                                      print(
-                                          "Initiating subscription with plan: ${plans[selectedIndex]['duration']}, voucher applied: $isVoucherApplied");
-
                                       final paymentUrl = await paymentNotifier
                                           .initiateSubscription(
-                                        "${plans[selectedIndex]['duration']}",
+                                        currentPlan.plan,
                                         applyVoucher: isVoucherApplied,
                                       );
 
                                       if (paymentUrl != null &&
                                           paymentUrl.isNotEmpty) {
-                                        print(
-                                            "Subscription URL received: $paymentUrl");
                                         // Valid URL received, navigate to checkout
                                         Nav().pushReplacement(
                                             EasyCheckout(url: paymentUrl));
@@ -153,16 +186,13 @@ class SubscriptionView extends ConsumerWidget with CommonWidgets {
                                         final paymentState =
                                             ref.read(paymentNotifierProvider);
                                         if (paymentState.hasError) {
-                                          print(
-                                              "Subscription error: ${paymentState.error}");
                                           Fluttertoast.showToast(
                                             msg: paymentState.error.toString(),
                                           );
                                         } else {
                                           // Could be already subscribed
                                           Fluttertoast.showToast(
-                                            msg:
-                                                "You already have an active subscription",
+                                            msg: alreadyActiveSubscriptionMsg,
                                           );
                                         }
                                       }

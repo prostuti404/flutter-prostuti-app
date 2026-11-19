@@ -43,13 +43,10 @@ class ForgetPasswordRepo {
 
     if (response.statusCode == 200) {
       return response.data["success"];
-    } else if (response.statusCode == 404) {
-      return false;
     } else {
       final errorResponse = ErrorResponse.fromJson(response.data);
       ErrorHandler().setErrorMessage(errorResponse.message);
       return false;
     }
-    return false;
   }
 }

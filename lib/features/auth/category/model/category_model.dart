@@ -1,85 +1,44 @@
-// Updated category_model.dart
-class Category {
-  bool? success;
-  String? message;
-  Meta? meta;
-  List<String>? data;
+import 'category_constant.dart';
 
-  Category({this.success, this.message, this.meta, this.data});
+/// One main category and its sub-categories, from
+/// `GET /auth/registration-categories`.
+///
+/// Both strings are wire values (`"Academic"`, `"Science"`, ...) that go back
+/// to the backend verbatim on registration — only the labels are localised.
+class RegistrationCategory {
+  final String mainCategory;
+  final List<String> subCategories;
 
-  Category.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    message = json['message'];
-    meta = json['meta'] != null ? Meta.fromJson(json['meta']) : null;
-    data = json['data'].cast<String>();
-  }
+  const RegistrationCategory({
+    required this.mainCategory,
+    this.subCategories = const [],
+  });
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['success'] = this.success;
-    data['message'] = this.message;
-    if (this.meta != null) {
-      data['meta'] = this.meta!.toJson();
-    }
-    data['data'] = this.data;
-    return data;
-  }
-}
-
-class Meta {
-  int? count;
-
-  Meta({this.count});
-
-  Meta.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['count'] = this.count;
-    return data;
-  }
-}
-
-// New models for structured categories
-class CategoryStructure {
-  List<String>? mainCategories;
-  Map<String, List<String>>? subCategories;
-
-  CategoryStructure({this.mainCategories, this.subCategories});
-
-  CategoryStructure.fromJson(Map<String, dynamic> json) {
-    mainCategories = json['mainCategories']?.cast<String>();
-
-    subCategories = <String, List<String>>{};
-    if (json['subCategories'] != null) {
-      json['subCategories'].forEach((key, value) {
-        subCategories![key] = List<String>.from(value);
-      });
-    }
-  }
-}
-
-class StudentCategory {
-  String mainCategory;
-  String? subCategory;
-
-  StudentCategory({required this.mainCategory, this.subCategory});
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['mainCategory'] = mainCategory;
-    if (subCategory != null) {
-      data['subCategory'] = subCategory;
-    }
-    return data;
-  }
-
-  factory StudentCategory.fromJson(Map<String, dynamic> json) {
-    return StudentCategory(
-      mainCategory: json['mainCategory'],
-      subCategory: json['subCategory'],
+  factory RegistrationCategory.fromJson(Map<String, dynamic> json) {
+    return RegistrationCategory(
+      mainCategory: json['mainCategory']?.toString() ?? '',
+      subCategories: (json['subCategories'] as List<dynamic>? ?? const [])
+          .map((e) => e.toString())
+          .where((e) => e.isNotEmpty)
+          .toList(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'mainCategory': mainCategory,
+        'subCategories': subCategories,
+      };
+
+  /// Whether picking this category also requires picking a sub-category.
+  /// "Job" ships with an empty list, so it completes in one step.
+  bool get hasSubCategories => subCategories.isNotEmpty;
+
+  /// What the picker shows when the endpoint cannot be reached: the three
+  /// main categories the backend has always accepted, with no sub-step, so a
+  /// transient failure never blocks someone from finishing registration.
+  static const List<RegistrationCategory> fallback = [
+    RegistrationCategory(mainCategory: MainCategory.ACADEMIC),
+    RegistrationCategory(mainCategory: MainCategory.ADMISSION),
+    RegistrationCategory(mainCategory: MainCategory.JOB),
+  ];
 }
