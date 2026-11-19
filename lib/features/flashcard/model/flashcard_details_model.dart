@@ -27,6 +27,7 @@ class FlashcardDetail {
   String? title;
   String? visibility;
   String? categoryId;
+  FlashcardCategoryInfo? category;
   StudentInfo? studentId;
   bool? isApproved;
   String? createdAt;
@@ -39,6 +40,7 @@ class FlashcardDetail {
     this.title,
     this.visibility,
     this.categoryId,
+    this.category,
     this.studentId,
     this.isApproved,
     this.createdAt,
@@ -51,9 +53,18 @@ class FlashcardDetail {
     sId = json['_id'];
     title = json['title'];
     visibility = json['visibility'];
-    categoryId = json['categoryId'];
-    studentId = json['studentId'] != null
-        ? StudentInfo.fromJson(json['studentId'])
+    // The deck endpoint populates `categoryId` (and `studentId`) as objects;
+    // older payloads carried plain id strings.
+    final rawCategory = json['categoryId'];
+    if (rawCategory is Map<String, dynamic>) {
+      category = FlashcardCategoryInfo.fromJson(rawCategory);
+      categoryId = category!.sId;
+    } else if (rawCategory is String) {
+      categoryId = rawCategory;
+    }
+    final rawStudent = json['studentId'];
+    studentId = rawStudent is Map<String, dynamic>
+        ? StudentInfo.fromJson(rawStudent)
         : null;
     isApproved = json['isApproved'];
     createdAt = json['createdAt'];
@@ -72,7 +83,7 @@ class FlashcardDetail {
     data['_id'] = sId;
     data['title'] = title;
     data['visibility'] = visibility;
-    data['categoryId'] = categoryId;
+    data['categoryId'] = category?.toJson() ?? categoryId;
     if (studentId != null) {
       data['studentId'] = studentId!.toJson();
     }
@@ -83,6 +94,35 @@ class FlashcardDetail {
     if (items != null) {
       data['items'] = items!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class FlashcardCategoryInfo {
+  String? sId;
+  String? group;
+  String? subject;
+  String? lesson;
+  String? name;
+
+  FlashcardCategoryInfo(
+      {this.sId, this.group, this.subject, this.lesson, this.name});
+
+  FlashcardCategoryInfo.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    group = json['group'];
+    subject = json['subject'];
+    lesson = json['lesson'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['group'] = group;
+    data['subject'] = subject;
+    data['lesson'] = lesson;
+    data['name'] = name;
     return data;
   }
 }
