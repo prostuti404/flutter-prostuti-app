@@ -56,6 +56,30 @@ class NotificationViewModel extends _$NotificationViewModel {
     }
   }
 
+  /// Marks [notificationId] as read: updates the list immediately and syncs to
+  /// the backend, rolling the flag back if the request fails.
+  Future<void> markAsRead(String notificationId) async {
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    final index = current.indexWhere((n) => n.sId == notificationId);
+    if (index == -1 || current[index].isRead == true) return;
+
+    current[index].isRead = true;
+    state = AsyncData([...current]);
+
+    final result =
+        await ref.read(notificationRepoProvider).markAsRead(notificationId);
+
+    result.fold(
+      (error) {
+        current[index].isRead = false;
+        state = AsyncData([...current]);
+      },
+      (_) {},
+    );
+  }
+
   Future<void> refreshNotifications() async {
     state = const AsyncLoading();
     state = AsyncData(await fetchNotifications());
